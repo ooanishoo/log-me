@@ -107,4 +107,11 @@ class WorkoutModel extends Model {
     notifyListeners();
     //}
   }
+
+  void removeNoteFromExercise(Exercise exercise, String note) {
+    if (exercise.notes.length > 0 && exercise.notes.contains(note)) {
+      exercise.notes.remove(note);
+      notifyListeners();
+    }
+  }
 }

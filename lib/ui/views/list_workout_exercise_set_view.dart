@@ -49,27 +49,49 @@ class _ListWorkoutExerciseSetState extends State<ListWorkoutExerciseSet> {
   }
 
   Widget _exerciseSet(WorkoutModel model, int index) {
-    List<ExerciseSet> sets = model.currentWorkout.exercise[index].exerciseSet;
-    List<String> notes = model.currentWorkout.exercise[index].notes;
+    Exercise exercise = model.currentWorkout.exercise[index];
+    List<ExerciseSet> sets = exercise.exerciseSet;
+    List<String> notes = exercise.notes;
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
       child: Column(
           //crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             ListTile(
-              title: Text((index + 1).toString() +
-                  ". " +
-                  model.currentWorkout.exercise[index].name),
-              trailing:
-                  _actionMenu(model, model.currentWorkout.exercise[index]),
+              title: Text((index + 1).toString() + ". " + exercise.name),
+              trailing: _actionMenu(model, exercise),
             ),
             Column(
                 children: notes
                     .map(
-                      (note) => Padding(
-                        padding: EdgeInsets.only(left: 15, right: 15),
-                        child: TextField(
-                          decoration: InputDecoration(hintText: 'Add a note'),
+                      (note) => Dismissible(
+                        onDismissed: (direction) {
+                          model.removeNoteFromExercise(
+                              exercise, note.toString());
+                        },
+                        direction: DismissDirection.endToStart,
+                        key: UniqueKey(),
+                        background: Container(
+                          alignment: AlignmentDirectional.centerEnd,
+                          color: Colors.red,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                                Text('Delete'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        child: ListTile(
+                          title: TextField(
+                            decoration: InputDecoration(hintText: 'Add a note'),
+                          ),
                         ),
                       ),
                     )
