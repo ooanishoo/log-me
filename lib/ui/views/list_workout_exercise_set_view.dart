@@ -34,15 +34,12 @@ class _ListWorkoutExerciseSetState extends State<ListWorkoutExerciseSet> {
               ),
             )
           : Expanded(
-              child: Center(
-                //child: Text('No exercise added'),
-                child: new GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  },
-                  child: new TextField(),
-                ),
-                //Text('No exercise added'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('No exercise added.'),
+                  Text('Click on Add Exercises!'),
+                ],
               ),
             );
     });
