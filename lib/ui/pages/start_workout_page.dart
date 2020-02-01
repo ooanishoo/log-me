@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_log_me/ui/views/list_workout_exercise_set_view_new.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'package:scoped_log_me/scoped_models/app_model.dart';
@@ -53,7 +54,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
           // List of exercises in the current workout
           ScopedModel<WorkoutModel>(
             model: widget.workoutModel,
-            child: ListWorkoutExerciseSet(),
+            child: ListWorkoutExerciseSetNew(),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
