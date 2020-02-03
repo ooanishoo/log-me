@@ -3,14 +3,12 @@ import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:math';
+import 'package:built_collection/built_collection.dart';
 
 class WorkoutModel extends Model {
   Workout currentWorkout;
-  List<Exercise> _selectedExercises = [];
-  List<Workout> _workouts = [];
-
-  List<Exercise> get selectedExercises => this._selectedExercises;
-  List<Workout> get workouts => this._workouts;
+  List<Exercise> selectedExercises = [];
+  List<Workout> workouts = [];
 
   void startWorkout() {
     // set new workout object as currentWorkout
@@ -18,6 +16,7 @@ class WorkoutModel extends Model {
     currentWorkout = new Workout(
       name: 'Workout $name',
       date: new DateTime.now(),
+      exercises: [],
     );
     print('Workout name is ::' + name);
     notifyListeners();
@@ -25,12 +24,12 @@ class WorkoutModel extends Model {
 
   void finishWorkout() {
     workouts.add(currentWorkout);
+    currentWorkout = null;
   }
 
   void cancelWorkout() {
     print('cancelling workout');
-    _selectedExercises.clear();
-    notifyListeners();
+    currentWorkout = null;
   }
 
   void addWorkout(Workout value) {
@@ -44,17 +43,20 @@ class WorkoutModel extends Model {
     notifyListeners();
   }
 
-  void addExercises(List<Exercise> value) {
-    initializeFirstSet(value);
-    selectedExercises.addAll(value);
-    currentWorkout.exercise = selectedExercises;
-    print('coming from workout model' + selectedExercises.length.toString());
+  void addExercises(List<Exercise> exercises) {
+    exercises.map((ex) {
+      return selectedExercises.add(new Exercise()..name = ex.name);
+    }).toList();
+
+    initializeFirstSet(selectedExercises);
+    currentWorkout.exercises.addAll(selectedExercises);
+    selectedExercises.clear();
     notifyListeners();
   }
 
   void removeExercise(Exercise value) {
-    if (currentWorkout.exercise.contains(value))
-      currentWorkout.exercise.remove(value);
+    if (currentWorkout.exercises.contains(value))
+      currentWorkout.exercises.remove(value);
     notifyListeners();
   }
 
@@ -64,8 +66,8 @@ class WorkoutModel extends Model {
   }
 
   void initializeFirstSet(List<Exercise> exercises) {
-    exercises
-        .forEach((exercise) => exercise.exerciseSet = [ExerciseSet(index: 1)]);
+    exercises.forEach(
+        (exercise) => exercise.exerciseSets = [new ExerciseSet(index: 1)]);
   }
 
   void unselectExercise(Exercise value) {
@@ -75,16 +77,16 @@ class WorkoutModel extends Model {
   }
 
   void addSet(Exercise exercise) {
-    if (exercise.exerciseSet != null) {
-      exercise.exerciseSet
-          .add(ExerciseSet(index: exercise.exerciseSet.length + 1));
+    if (exercise.exerciseSets != null) {
+      exercise.exerciseSets
+          .add(ExerciseSet(index: exercise.exerciseSets.length + 1));
       notifyListeners();
     }
   }
 
   void removeSet(Exercise exercise, ExerciseSet set) {
-    if (exercise.exerciseSet.contains(set)) {
-      exercise.exerciseSet.remove(set);
+    if (exercise.exerciseSets.contains(set)) {
+      exercise.exerciseSets.remove(set);
       notifyListeners();
     }
   }
