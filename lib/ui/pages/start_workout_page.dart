@@ -17,44 +17,33 @@ class StartWorkoutPage extends StatefulWidget {
   final AppModel model;
   final VoidCallback onCancel;
   final VoidCallback onFinish;
-
   @override
   _StartWorkoutPageState createState() => _StartWorkoutPageState();
 }
 
 class _StartWorkoutPageState extends State<StartWorkoutPage> {
+  TextEditingController _workoutNameController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Start workout Page'),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   child: ScopedModel<AppModel>(
-      //     model: AppModel(),
-      //     child: ScopedModelDescendant<AppModel>(builder: (x, y, m) {
-      //       return RaisedButton(
-      //         child: Text('Add Exercises'),
-      //         onPressed: () {
-      //           HapticFeedback.heavyImpact();
-
-      //           Navigator.of(context).push(MaterialPageRoute(
-      //               builder: (context) => SelectExercisePage(
-      //                   model: widget.model,
-      //                   workoutModel: widget.workoutModel)));
-      //         },
-      //       );
-      //     }),
-      //   ),
-      // ),
       body: Column(
         children: <Widget>[
           ScopedModel<WorkoutModel>(
               model: widget.workoutModel,
               child:
                   ScopedModelDescendant<WorkoutModel>(builder: (x, y, model) {
+                _workoutNameController.text = model.currentWorkout.name;
+
                 return ListTile(
-                  title: Text(model.currentWorkout.name),
+                  //title: Text(model.currentWorkout.name),
+                  title: TextField(
+                    controller: _workoutNameController,
+                    onChanged: ((value) => model.currentWorkout.name = value),
+                    //model.currentWorkout.name
+                  ),
                   trailing: RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0)),
