@@ -4,24 +4,24 @@ class Workout {
   String name;
   DateTime date;
   bool isActive;
-  List<Exercise> exercise;
+  List<Exercise> exercises = [];
 
-  List get getExercise => exercise;
-  set setExercise(List<Exercise> value) => this.exercise = value;
+  List get getExercise => exercises;
+  set setExercise(List<Exercise> value) => this.exercises = value;
 
   Workout({
     this.name,
-    this.exercise,
+    this.exercises,
     this.isActive = true,
     this.date,
   });
 
   Workout.fromJson(Map<String, dynamic> json) {
     name = json['name'];
-    if (json['exercise'] != null) {
-      exercise = new List<Exercise>();
-      json['exercise'].forEach((v) {
-        exercise.add(new Exercise.fromJson(v));
+    if (json['exercises'] != null) {
+      exercises = new List<Exercise>();
+      json['exercises'].forEach((v) {
+        exercises.add(new Exercise.fromJson(v));
       });
     }
   }
