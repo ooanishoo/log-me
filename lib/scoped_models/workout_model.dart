@@ -3,7 +3,6 @@ import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:math';
-import 'package:built_collection/built_collection.dart';
 
 class WorkoutModel extends Model {
   Workout currentWorkout;
@@ -34,7 +33,6 @@ class WorkoutModel extends Model {
 
   void addWorkout(Workout value) {
     workouts.add(value);
-    print(workouts.length.toString());
     notifyListeners();
   }
 
@@ -46,6 +44,7 @@ class WorkoutModel extends Model {
   void addExercises(List<Exercise> exercises) {
     exercises.map((ex) {
       return selectedExercises.add(new Exercise()..name = ex.name);
+      // return selectedExercises.add(ex.newNode());
     }).toList();
 
     initializeFirstSet(selectedExercises);
@@ -60,20 +59,9 @@ class WorkoutModel extends Model {
     notifyListeners();
   }
 
-  void selectExercise(Exercise value) {
-    selectedExercises.add(value);
-    notifyListeners();
-  }
-
   void initializeFirstSet(List<Exercise> exercises) {
     exercises.forEach(
         (exercise) => exercise.exerciseSets = [new ExerciseSet(index: 1)]);
-  }
-
-  void unselectExercise(Exercise value) {
-    selectedExercises.remove(value);
-    print("Selected Exercises is ::" + selectedExercises.length.toString());
-    notifyListeners();
   }
 
   void addSet(Exercise exercise) {
@@ -104,10 +92,11 @@ class WorkoutModel extends Model {
   }
 
   void addNoteToExercise(Exercise exercise) {
-    //if (exercise.notes.length > 0) {
+    if (exercise.notes == null) {
+      exercise.notes = [];
+    }
     exercise.notes.add('Add note $exercise.notes.length+1.toString()');
     notifyListeners();
-    //}
   }
 
   void removeNoteFromExercise(Exercise exercise, String note) {
