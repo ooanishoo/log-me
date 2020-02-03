@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_log_me/ui/pages/add_exercise_page.dart';
@@ -43,6 +44,8 @@ class _HomePageState extends State<HomePage> {
                   RaisedButton(
                     child: Text('Add Exercises'),
                     onPressed: () {
+                      HapticFeedback.heavyImpact();
+
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
                               AddExercisePage(model: myModel)));
@@ -51,6 +54,8 @@ class _HomePageState extends State<HomePage> {
                   RaisedButton(
                     child: Text('Display Exercises'),
                     onPressed: () {
+                      HapticFeedback.heavyImpact();
+
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
                               DisplayExercise(model: myModel)));
@@ -59,6 +64,8 @@ class _HomePageState extends State<HomePage> {
                   RaisedButton(
                     child: Text('Select Exercises'),
                     onPressed: () {
+                      HapticFeedback.heavyImpact();
+
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
                               SelectExercisePage(model: myModel)));
@@ -67,6 +74,8 @@ class _HomePageState extends State<HomePage> {
                   RaisedButton(
                     child: Text('Completed Workouts'),
                     onPressed: () {
+                      HapticFeedback.heavyImpact();
+
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
                               ListWorkoutPage(model: workoutModel)));
@@ -77,6 +86,8 @@ class _HomePageState extends State<HomePage> {
                         ? Text('Start a new workout')
                         : Text('Continue workout'),
                     onPressed: () {
+                      HapticFeedback.heavyImpact();
+
                       if (!this.unfinishedWorkout) {
                         workoutModel.startWorkout();
                         setState(() => this.unfinishedWorkout = true);

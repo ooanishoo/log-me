@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_log_me/ui/views/list_workout_exercise_set_view_new.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -28,6 +29,24 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
       appBar: AppBar(
         title: Text('Start workout Page'),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: ScopedModel<AppModel>(
+      //     model: AppModel(),
+      //     child: ScopedModelDescendant<AppModel>(builder: (x, y, m) {
+      //       return RaisedButton(
+      //         child: Text('Add Exercises'),
+      //         onPressed: () {
+      //           HapticFeedback.heavyImpact();
+
+      //           Navigator.of(context).push(MaterialPageRoute(
+      //               builder: (context) => SelectExercisePage(
+      //                   model: widget.model,
+      //                   workoutModel: widget.workoutModel)));
+      //         },
+      //       );
+      //     }),
+      //   ),
+      // ),
       body: Column(
         children: <Widget>[
           ScopedModel<WorkoutModel>(
@@ -45,6 +64,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                       disabledTextColor: Colors.white,
                       textColor: Colors.white,
                       onPressed: () {
+                        HapticFeedback.heavyImpact();
                         model.finishWorkout();
                         widget.onFinish();
                         Navigator.of(context).pop();
@@ -55,6 +75,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
           ScopedModel<WorkoutModel>(
             model: widget.workoutModel,
             child: ListWorkoutExerciseSetNew(),
+            //child: ListWorkoutExerciseSet(),
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -82,6 +103,8 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                     return RaisedButton(
                       child: Text('Add Exercises'),
                       onPressed: () {
+                        HapticFeedback.heavyImpact();
+
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelectExercisePage(
                                 model: widget.model,

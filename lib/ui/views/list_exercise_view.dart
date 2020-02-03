@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 
 import 'package:scoped_log_me/scoped_models/app_model.dart';
@@ -54,6 +55,8 @@ class _ListExerciseState extends State<ListExercise> {
       trailing: Checkbox(
           value: exercise.isCheck,
           onChanged: (bool value) {
+            HapticFeedback.selectionClick();
+
             setState(() {
               exercise.isCheck = value;
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/ui/pages/add_exercise_page.dart';
 import 'package:scoped_log_me/ui/views/list_exercise_view.dart';
@@ -83,6 +84,8 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
                       RaisedButton(
                           child: Text('Add Exercise ($exerciseLength)'),
                           onPressed: (() {
+                            HapticFeedback.heavyImpact();
+
                             // add the selected exercise to workout
                             widget.workoutModel
                                 .addExercises(model.selectedExercises);

@@ -20,18 +20,18 @@ class _ListWorkoutExerciseState extends State<ListWorkoutExercise> {
     PopupMenu.context = context;
 
     return ScopedModelDescendant<WorkoutModel>(builder: (x, y, mdl) {
-      return (mdl.currentWorkout.exercise != null &&
-              mdl.currentWorkout.exercise.length > 0)
+      return (mdl.currentWorkout.exercises != null &&
+              mdl.currentWorkout.exercises.length > 0)
           ? Expanded(
               child: ListView.builder(
-                itemCount: mdl.currentWorkout.exercise.length,
+                itemCount: mdl.currentWorkout.exercises.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     title: Text((index + 1).toString() +
                         ". " +
-                        mdl.currentWorkout.exercise[index].name),
+                        mdl.currentWorkout.exercises[index].name),
                     trailing:
-                        _actionMenu(mdl, mdl.currentWorkout.exercise[index]),
+                        _actionMenu(mdl, mdl.currentWorkout.exercises[index]),
                   );
                 },
               ),

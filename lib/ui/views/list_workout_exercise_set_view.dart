@@ -23,11 +23,11 @@ class _ListWorkoutExerciseSetState extends State<ListWorkoutExerciseSet> {
     PopupMenu.context = context;
 
     return ScopedModelDescendant<WorkoutModel>(builder: (x, y, mdl) {
-      return (mdl.currentWorkout.exercise != null &&
-              mdl.currentWorkout.exercise.length > 0)
+      return (mdl.currentWorkout.exercises != null &&
+              mdl.currentWorkout.exercises.length > 0)
           ? Expanded(
               child: ListView.builder(
-                itemCount: mdl.currentWorkout.exercise.length,
+                itemCount: mdl.currentWorkout.exercises.length,
                 itemBuilder: (BuildContext context, int index) {
                   return _exerciseSet(mdl, index);
                 },
@@ -46,8 +46,8 @@ class _ListWorkoutExerciseSetState extends State<ListWorkoutExerciseSet> {
   }
 
   Widget _exerciseSet(WorkoutModel model, int index) {
-    Exercise exercise = model.currentWorkout.exercise[index];
-    List<ExerciseSet> sets = exercise.exerciseSet;
+    Exercise exercise = model.currentWorkout.exercises[index];
+    List<ExerciseSet> sets = exercise.exerciseSets;
     List<String> notes = exercise.notes;
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
@@ -150,10 +150,12 @@ class _ListWorkoutExerciseSetState extends State<ListWorkoutExerciseSet> {
                                   DataCell(Container(
                                     width: 40,
                                     //decoration: BoxDecoration(color: Colors.blue),
-                                    child: TextField(
-                                      keyboardType:
-                                          TextInputType.numberWithOptions(
-                                              decimal: true),
+                                    child: Form(
+                                      child: TextField(
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                decimal: true),
+                                      ),
                                     ),
                                   )),
                                   DataCell(Container(
@@ -172,7 +174,7 @@ class _ListWorkoutExerciseSetState extends State<ListWorkoutExerciseSet> {
                                         onPressed: () {
                                           model.removeSet(
                                               model.currentWorkout
-                                                  .exercise[index],
+                                                  .exercises[index],
                                               set);
                                         },
                                       ),
@@ -205,7 +207,8 @@ class _ListWorkoutExerciseSetState extends State<ListWorkoutExerciseSet> {
                 ),
                 color: Colors.grey,
                 onPressed: () {
-                  model.addSet(model.currentWorkout.exercise[index]);
+                  model.addSet(model.currentWorkout.exercises[index]);
+                  HapticFeedback.heavyImpact();
                 },
               ),
             )

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
@@ -23,13 +24,19 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     PopupMenu.context = context;
 
     return ScopedModelDescendant<WorkoutModel>(builder: (x, y, mdl) {
-      return (mdl.currentWorkout.exercise != null &&
-              mdl.currentWorkout.exercise.length > 0)
+      return (mdl.currentWorkout.exercises != null &&
+              mdl.currentWorkout.exercises.length > 0)
           ? Expanded(
               child: ListView.builder(
-                itemCount: mdl.currentWorkout.exercise.length,
+                // reverse: true,
+                itemCount: mdl.currentWorkout.exercises.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return _exerciseSet(mdl, index);
+                  return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onPanDown: (_) {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                      },
+                      child: _exerciseSet(mdl, index));
                 },
               ),
             )
@@ -46,8 +53,8 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
   }
 
   Widget _exerciseSet(WorkoutModel model, int index) {
-    Exercise exercise = model.currentWorkout.exercise[index];
-    List<ExerciseSet> sets = exercise.exerciseSet;
+    Exercise exercise = model.currentWorkout.exercises[index];
+    List<ExerciseSet> sets = exercise.exerciseSets;
     List<String> notes = exercise.notes;
 
     return Padding(
@@ -55,122 +62,122 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
       child: Column(
           //crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onPanDown: (_) {
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      child: ListTile(
-                        title:
-                            Text((index + 1).toString() + ". " + exercise.name),
-                        trailing: _actionMenu(model, exercise),
-                      ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    child: ListTile(
+                      title:
+                          Text((index + 1).toString() + ". " + exercise.name),
+                      trailing: _actionMenu(model, exercise),
                     ),
-                    Column(
-                        children: notes
-                            .map(
-                              (note) => Dismissible(
-                                onDismissed: (direction) {
-                                  model.removeNoteFromExercise(
-                                      exercise, note.toString());
-                                },
-                                direction: DismissDirection.endToStart,
-                                key: UniqueKey(),
-                                background: Container(
-                                  alignment: AlignmentDirectional.centerEnd,
-                                  color: Colors.red,
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        0.0, 0.0, 10.0, 0.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.delete,
-                                          color: Colors.white,
-                                        ),
-                                        Text('Delete'),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                child: ListTile(
-                                  title: TextField(
-                                    decoration:
-                                        InputDecoration(hintText: 'Add a note'),
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList()),
-                    Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              width: 40,
-                              child: Text('Set'),
+                  ),
+                  // Column(
+                  //     children: notes
+                  //         .map(
+                  //           (note) =>
+                  //               // Dismissible(
+                  //               //   onDismissed: (direction) {
+                  //               //     HapticFeedback.heavyImpact();
+                  //               //     model.removeNoteFromExercise(
+                  //               //         exercise, note.toString());
+                  //               //   },
+                  //               //   direction: DismissDirection.endToStart,
+                  //               //   key: UniqueKey(),
+                  //               //   background: Container(
+                  //               //     alignment: AlignmentDirectional.centerEnd,
+                  //               //     color: Colors.red,
+                  //               //     child: Padding(
+                  //               //       padding:
+                  //               //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                  //               //       child: Row(
+                  //               //         mainAxisAlignment: MainAxisAlignment.end,
+                  //               //         children: <Widget>[
+                  //               //           Icon(
+                  //               //             Icons.delete,
+                  //               //             color: Colors.white,
+                  //               //           ),
+                  //               //           Text('Delete'),
+                  //               //         ],
+                  //               //       ),
+                  //               //     ),
+                  //               //   ),
+                  //               //  child:
+                  //               ListTile(
+                  //             title: TextField(
+                  //               decoration:
+                  //                   InputDecoration(hintText: 'Add a note'),
+                  //             ),
+                  //           ),
+                  //           //),
+                  //         )
+                  //         .toList()),
+                  Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            width: 40,
+                            child: Text('Set'),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            width: 90,
+                            child: Text('Weight'),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            width: 90,
+                            child: Text('Reps'),
+                          ),
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              // width: MediaQuery.of(context).size.width -
+                              //    (40 + 90 + 90 - 32),
+                              child: Text('Actions'),
                             ),
-                            Container(
-                              alignment: Alignment.center,
-                              width: 90,
-                              child: Text('Weight'),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              width: 90,
-                              child: Text('Reps'),
-                            ),
-                            Expanded(
-                              child: Container(
-                                alignment: Alignment.centerRight,
-                                // width: MediaQuery.of(context).size.width -
-                                //    (40 + 90 + 90 - 32),
-                                child: Text('Actions'),
-                              ),
-                            ),
-                          ],
-                        )),
-                    Divider(),
-                    Column(
-                        children: sets
-                            .map(
-                              (set) => Dismissible(
-                                onDismissed: (direction) {
-                                  model.removeSet(
-                                      model.currentWorkout.exercise[index],
-                                      set);
-                                },
-                                direction: DismissDirection.endToStart,
-                                key: UniqueKey(),
-                                background: Container(
-                                  alignment: AlignmentDirectional.centerEnd,
-                                  color: Colors.red,
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        0.0, 0.0, 10.0, 0.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.delete,
-                                          color: Colors.white,
-                                        ),
-                                        Text('Delete'),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                child: Container(
+                          ),
+                        ],
+                      )),
+                  Divider(),
+                  Column(
+                      children: sets
+                          .map(
+                            (set) =>
+                                // Dismissible(
+                                //   onDismissed: (direction) {
+                                //     HapticFeedback.heavyImpact();
+                                //     model.removeSet(
+                                //         model.currentWorkout.exercises[index], set);
+                                //   },
+                                //   direction: DismissDirection.endToStart,
+                                //   key: UniqueKey(),
+                                //   background: Container(
+                                //     alignment: AlignmentDirectional.centerEnd,
+                                //     color: Colors.red,
+                                //     child: Padding(
+                                //       padding:
+                                //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                                //       child: Row(
+                                //         mainAxisAlignment: MainAxisAlignment.end,
+                                //         children: <Widget>[
+                                //           Icon(
+                                //             Icons.delete,
+                                //             color: Colors.white,
+                                //           ),
+                                //           Text('Delete'),
+                                //         ],
+                                //       ),
+                                //     ),
+                                //   ),
+                                //  child:
+                                Container(
                                     decoration: BoxDecoration(
                                         color: set.isCheck
                                             ? Colors.grey[900]
@@ -184,17 +191,23 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                         Form(
                                           child: Row(children: <Widget>[
                                             Container(
-                                                width: 40,
-                                                alignment: Alignment.centerLeft,
-                                                child:
-                                                    Text(set.index.toString())),
+                                              width: 40,
+                                              alignment: Alignment.centerLeft,
+                                              child:
+                                                  _exerciseSetMenu(model, set),
+                                            ),
                                             Container(
                                               padding: EdgeInsets.symmetric(
                                                   vertical: 5),
                                               margin: EdgeInsets.only(
                                                   left: 5, right: 5),
                                               width: 80,
-                                              child: TextFormField(
+                                              child: TextField(
+                                                controller:
+                                                    TextEditingController(),
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(
+                                                        decimal: true),
                                                 decoration: InputDecoration(
                                                   isDense: true,
 
@@ -214,7 +227,10 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                               margin: EdgeInsets.only(
                                                   left: 5, right: 5),
                                               width: 80,
-                                              child: TextFormField(
+                                              child: TextField(
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(
+                                                        decimal: true),
                                                 decoration: InputDecoration(
                                                   isDense: true,
                                                   border: OutlineInputBorder(),
@@ -240,7 +256,10 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                                 children: <Widget>[
                                                   IconButton(
                                                       icon: Icon(Icons.chat),
-                                                      onPressed: () {}),
+                                                      onPressed: () {
+                                                        HapticFeedback
+                                                            .selectionClick();
+                                                      }),
                                                   Container(
                                                     decoration: BoxDecoration(
                                                       color: set.isCheck
@@ -255,6 +274,9 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                                     child: IconButton(
                                                       icon: Icon(Icons.done),
                                                       onPressed: () {
+                                                        HapticFeedback
+                                                            .heavyImpact();
+
                                                         this.setState(() {
                                                           set.isCheck =
                                                               !set.isCheck;
@@ -269,13 +291,13 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                         ),
                                       ],
                                     )),
-                              ),
-                            )
-                            .toList()),
-                  ],
-                ),
+                            // ),
+                          )
+                          .toList()),
+                ],
               ),
             ),
+            //),
             ListTile(
               trailing: RaisedButton(
                 child: Text(
@@ -284,7 +306,8 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                 ),
                 color: Colors.grey,
                 onPressed: () {
-                  model.addSet(model.currentWorkout.exercise[index]);
+                  model.addSet(model.currentWorkout.exercises[index]);
+                  HapticFeedback.heavyImpact();
                 },
               ),
             )
@@ -310,6 +333,7 @@ Widget _actionMenu(WorkoutModel model, Exercise exercise) =>
         ),
       ],
       onSelected: (action) {
+        HapticFeedback.selectionClick();
         switch (action) {
           case "replace":
             break;
