@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_log_me/service_locator.dart';
@@ -36,10 +35,8 @@ class _NavigationControllerState extends State<NavigationController> {
       key: PageStorageKey('Page4'),
       model: locator<AppModel>(),
     ),
-    AddExercisePage(
+    MenuPage(
       key: PageStorageKey('Page5'),
-      workoutModel: locator<WorkoutModel>(),
-      model: locator<AppModel>(),
     ),
   ];
 
