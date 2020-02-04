@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_log_me/ui/pages/home_page.dart';
+import 'package:scoped_log_me/controller/NavigationController.dart';
+import 'service_locator.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  setupLocator();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -9,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.dark(),
       title: 'Material App',
-      home: HomePage(),
+      home: NavigationController(),
     );
   }
 }

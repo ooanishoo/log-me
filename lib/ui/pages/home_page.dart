@@ -12,28 +12,29 @@ import 'package:scoped_log_me/ui/views/list_exercise_view.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  HomePage({Key key, this.workoutModel, this.model}) : super(key: key);
+
+  final WorkoutModel workoutModel;
+  final AppModel model;
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  AppModel myModel = AppModel();
-  WorkoutModel workoutModel = WorkoutModel();
   bool unfinishedWorkout = false;
 
   @override
   void initState() {
     super.initState();
     print('getting all the exercises');
-    myModel.getAllExercises();
+    widget.model.getAllExercises();
   }
 
   @override
   Widget build(BuildContext context) {
     return ScopedModel<AppModel>(
-      model: myModel,
+      model: widget.model,
       child: Scaffold(
           appBar: AppBar(title: Text('Log me')),
           body: Column(
@@ -48,7 +49,7 @@ class _HomePageState extends State<HomePage> {
 
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              AddExercisePage(model: myModel)));
+                              AddExercisePage(model: widget.model)));
                     },
                   ),
                   RaisedButton(
@@ -58,7 +59,7 @@ class _HomePageState extends State<HomePage> {
 
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              DisplayExercise(model: myModel)));
+                              DisplayExercise(model: widget.model)));
                     },
                   ),
                   RaisedButton(
@@ -68,7 +69,7 @@ class _HomePageState extends State<HomePage> {
 
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              SelectExercisePage(model: myModel)));
+                              SelectExercisePage(model: widget.model)));
                     },
                   ),
                   RaisedButton(
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
 
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              ListWorkoutPage(model: workoutModel)));
+                              ListWorkoutPage(model: widget.workoutModel)));
                     },
                   ),
                   RaisedButton(
@@ -89,13 +90,13 @@ class _HomePageState extends State<HomePage> {
                       HapticFeedback.heavyImpact();
 
                       if (!this.unfinishedWorkout) {
-                        workoutModel.startWorkout();
+                        widget.workoutModel.startWorkout();
                         setState(() => this.unfinishedWorkout = true);
                       }
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => StartWorkoutPage(
-                              model: myModel,
-                              workoutModel: workoutModel,
+                              model: widget.model,
+                              workoutModel: widget.workoutModel,
                               onCancel: (() => setState(
                                   () => this.unfinishedWorkout = false)),
                               onFinish: (() => setState(

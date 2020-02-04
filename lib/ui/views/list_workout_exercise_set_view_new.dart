@@ -19,6 +19,31 @@ class ListWorkoutExerciseSetNew extends StatefulWidget {
 }
 
 class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
+  List<TextEditingController> controller;
+  Map<Exercise, List<TextEditingController>> controllers =
+      new Map<Exercise, List<TextEditingController>>();
+
+  List<TextEditingController> list = new List<TextEditingController>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    WorkoutModel model = ScopedModel.of(context);
+    if (model.currentWorkout.exercises == null) setupController();
+
+    //work on the controller
+    // model.currentWorkout.exercises.forEach((ex) {
+    //   return controllers.putIfAbsent(ex,
+    //       ex.exerciseSets.map((set) => list.add(new TextEditingController())));
+    // });
+  }
+
+  void setupController() {
+    controller = [];
+    print(controller.length);
+  }
+
   @override
   Widget build(BuildContext context) {
     PopupMenu.context = context;
@@ -56,6 +81,9 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     Exercise exercise = model.currentWorkout.exercises[index];
     List<ExerciseSet> sets = exercise.exerciseSets;
     List<String> notes = exercise.notes;
+    if (notes == null) {
+      notes = [];
+    }
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -74,46 +102,46 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                       trailing: _actionMenu(model, exercise),
                     ),
                   ),
-                  // Column(
-                  //     children: notes
-                  //         .map(
-                  //           (note) =>
-                  //               // Dismissible(
-                  //               //   onDismissed: (direction) {
-                  //               //     HapticFeedback.heavyImpact();
-                  //               //     model.removeNoteFromExercise(
-                  //               //         exercise, note.toString());
-                  //               //   },
-                  //               //   direction: DismissDirection.endToStart,
-                  //               //   key: UniqueKey(),
-                  //               //   background: Container(
-                  //               //     alignment: AlignmentDirectional.centerEnd,
-                  //               //     color: Colors.red,
-                  //               //     child: Padding(
-                  //               //       padding:
-                  //               //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                  //               //       child: Row(
-                  //               //         mainAxisAlignment: MainAxisAlignment.end,
-                  //               //         children: <Widget>[
-                  //               //           Icon(
-                  //               //             Icons.delete,
-                  //               //             color: Colors.white,
-                  //               //           ),
-                  //               //           Text('Delete'),
-                  //               //         ],
-                  //               //       ),
-                  //               //     ),
-                  //               //   ),
-                  //               //  child:
-                  //               ListTile(
-                  //             title: TextField(
-                  //               decoration:
-                  //                   InputDecoration(hintText: 'Add a note'),
-                  //             ),
-                  //           ),
-                  //           //),
-                  //         )
-                  //         .toList()),
+                  Column(
+                      children: notes
+                          .map(
+                            (note) =>
+                                // Dismissible(
+                                //   onDismissed: (direction) {
+                                //     HapticFeedback.heavyImpact();
+                                //     model.removeNoteFromExercise(
+                                //         exercise, note.toString());
+                                //   },
+                                //   direction: DismissDirection.endToStart,
+                                //   key: UniqueKey(),
+                                //   background: Container(
+                                //     alignment: AlignmentDirectional.centerEnd,
+                                //     color: Colors.red,
+                                //     child: Padding(
+                                //       padding:
+                                //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                                //       child: Row(
+                                //         mainAxisAlignment: MainAxisAlignment.end,
+                                //         children: <Widget>[
+                                //           Icon(
+                                //             Icons.delete,
+                                //             color: Colors.white,
+                                //           ),
+                                //           Text('Delete'),
+                                //         ],
+                                //       ),
+                                //     ),
+                                //   ),
+                                //  child:
+                                ListTile(
+                              title: TextField(
+                                decoration:
+                                    InputDecoration(hintText: 'Add a note'),
+                              ),
+                            ),
+                            //),
+                          )
+                          .toList()),
                   Container(
                       padding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 16),

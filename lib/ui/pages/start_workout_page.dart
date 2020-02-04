@@ -23,6 +23,7 @@ class StartWorkoutPage extends StatefulWidget {
 
 class _StartWorkoutPageState extends State<StartWorkoutPage> {
   TextEditingController _workoutNameController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
