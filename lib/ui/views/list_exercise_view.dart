@@ -84,6 +84,12 @@ class _ListExerciseState extends State<ListExercise> {
                 });
               }
             },
+            trailing: 
+            exercise.isCheck ?
+            Icon(
+              Icons.done,
+              color: Colors.teal,
+            ):Container(width:1),
           ),
         ),
       ),
