@@ -64,7 +64,7 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
             // Exercise List
             ScopedModel<AppModel>(
               model: widget.model,
-              child: ListExercise(filter: filter),
+              child: ListExercise(filter: filter, isSelectable:true ),
             ),
             // Add Buttons
             ScopedModel<AppModel>(

@@ -61,7 +61,6 @@ class _ListExercisePageState extends State<ListExercisePage> {
               model: widget.model,
               child: ListExercise(
                 filter: filter,
-                hasCheckbox: false,
               ),
             ),
           ],

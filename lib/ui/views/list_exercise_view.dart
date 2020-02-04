@@ -6,11 +6,11 @@ import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ListExercise extends StatefulWidget {
-  const ListExercise({Key key, this.filter, this.hasCheckbox = true})
+  const ListExercise({Key key, this.filter, this.isSelectable = false})
       : super(key: key);
 
   final String filter;
-  final bool hasCheckbox;
+  final bool isSelectable;
 
   @override
   _ListExerciseState createState() => _ListExerciseState();
@@ -52,38 +52,40 @@ class _ListExerciseState extends State<ListExercise> {
   }
 
   Widget exerciseTile(AppModel model, Exercise exercise) {
-    return ListTileTheme(
-      dense: true,
-      child: ListTile(
-        title: new Text(exercise.name),
-        onTap: () {},
-        trailing: widget.hasCheckbox == true
-            ? Checkbox(
-                value: exercise.isCheck,
-                onChanged: (bool value) {
-                  HapticFeedback.selectionClick();
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 1),
+      child: Ink(
+        color: exercise.isCheck ? Colors.grey[900] : Color(0xFF303030),
+        child: ListTileTheme(
+          dense: true,
+          child: ListTile(
+            title: new Text(exercise.name),
+            onTap: () {
+              HapticFeedback.selectionClick();
+              if (widget.isSelectable) {
+                setState(() {
+                  exercise.isCheck = !exercise.isCheck;
 
-                  setState(() {
-                    exercise.isCheck = value;
-
-                    // Add the exercise only if it is selected
-                    if (exercise.isCheck) {
-                      print('checked');
-                      // Add only if the list already doesn't have the exercise
-                      if (!model.selectedExercises.contains(exercise)) {
-                        print("list doesn't contains Ex");
-                        model.selectExercise(exercise);
-                      }
-                    } else {
-                      print('unchecked');
-                      if (model.selectedExercises.contains(exercise)) {
-                        print("list contains Ex, need to remove it");
-                        model.unselectExercise(exercise);
-                      }
+                  // Add the exercise only if it is selected
+                  if (exercise.isCheck) {
+                    print('checked');
+                    // Add only if the list already doesn't have the exercise
+                    if (!model.selectedExercises.contains(exercise)) {
+                      print("list doesn't contains Ex");
+                      model.selectExercise(exercise);
                     }
-                  });
-                })
-            : Container(width: 1),
+                  } else {
+                    print('unchecked');
+                    if (model.selectedExercises.contains(exercise)) {
+                      print("list contains Ex, need to remove it");
+                      model.unselectExercise(exercise);
+                    }
+                  }
+                });
+              }
+            },
+          ),
+        ),
       ),
     );
   }
