@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
@@ -105,40 +106,65 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                   Column(
                       children: notes
                           .map(
-                            (note) =>
-                                // Dismissible(
-                                //   onDismissed: (direction) {
-                                //     HapticFeedback.heavyImpact();
-                                //     model.removeNoteFromExercise(
-                                //         exercise, note.toString());
-                                //   },
-                                //   direction: DismissDirection.endToStart,
-                                //   key: UniqueKey(),
-                                //   background: Container(
-                                //     alignment: AlignmentDirectional.centerEnd,
-                                //     color: Colors.red,
-                                //     child: Padding(
-                                //       padding:
-                                //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                                //       child: Row(
-                                //         mainAxisAlignment: MainAxisAlignment.end,
-                                //         children: <Widget>[
-                                //           Icon(
-                                //             Icons.delete,
-                                //             color: Colors.white,
-                                //           ),
-                                //           Text('Delete'),
-                                //         ],
-                                //       ),
-                                //     ),
-                                //   ),
-                                //  child:
-                                ListTile(
-                              title: TextField(
-                                decoration:
-                                    InputDecoration(hintText: 'Add a note'),
+                            (note) => Slidable(
+                              actionPane: SlidableDrawerActionPane(),
+                              actionExtentRatio: 0.25,
+                              child: ListTile(
+                                title: TextField(
+                                  decoration:
+                                      InputDecoration(hintText: 'Add a note'),
+                                ),
                               ),
+                              secondaryActions: <Widget>[
+                                SlideAction(
+                                    child: Container(
+                                        padding: EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle),
+                                        child: Icon(Icons.delete)),
+                                    //color: Color(0xFF303030),
+                                    color: Colors.grey[900],
+                                    onTap: () {
+                                      HapticFeedback.heavyImpact();
+                                      model.removeNoteFromExercise(
+                                          exercise, note.toString());
+                                    }),
+                              ],
                             ),
+                            // Dismissible(
+                            //   onDismissed: (direction) {
+                            //     HapticFeedback.heavyImpact();
+                            //     model.removeNoteFromExercise(
+                            //         exercise, note.toString());
+                            //   },
+                            //   direction: DismissDirection.endToStart,
+                            //   key: UniqueKey(),
+                            //   background: Container(
+                            //     alignment: AlignmentDirectional.centerEnd,
+                            //     color: Colors.red,
+                            //     child: Padding(
+                            //       padding:
+                            //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                            //       child: Row(
+                            //         mainAxisAlignment: MainAxisAlignment.end,
+                            //         children: <Widget>[
+                            //           Icon(
+                            //             Icons.delete,
+                            //             color: Colors.white,
+                            //           ),
+                            //           Text('Delete'),
+                            //         ],
+                            //       ),
+                            //     ),
+                            //   ),
+                            //  child:
+                            //   ListTile(
+                            // title: TextField(
+                            //   decoration:
+                            //       InputDecoration(hintText: 'Add a note'),
+                            // ),
+                            //),
                             //),
                           )
                           .toList()),

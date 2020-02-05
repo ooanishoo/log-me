@@ -4,6 +4,7 @@ import 'package:scoped_log_me/models/exercise.dart';
 
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 
 class ListExercise extends StatefulWidget {
   const ListExercise({Key key, this.filter, this.isSelectable = false})
@@ -84,12 +85,12 @@ class _ListExerciseState extends State<ListExercise> {
                 });
               }
             },
-            trailing: 
-            exercise.isCheck ?
-            Icon(
-              Icons.done,
-              color: Colors.teal,
-            ):Container(width:1),
+            trailing: exercise.isCheck
+                ? Icon(
+                    Icons.done,
+                    color: Colors.teal,
+                  )
+                : Container(width: 1),
           ),
         ),
       ),
