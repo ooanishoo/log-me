@@ -18,7 +18,7 @@ class AddExercisePage extends StatelessWidget {
       model: model,
       child: Scaffold(
           appBar: AppBar(
-            title: Text('Add Exercises Page'),
+            title: Text('Add New Exercise'),
           ),
           body: AddExercise()),
     );
