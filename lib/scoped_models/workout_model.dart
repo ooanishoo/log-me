@@ -100,7 +100,7 @@ class WorkoutModel extends Model {
     if (exercise.notes == null) {
       exercise.notes = [];
     }
-    exercise.notes.add('Add note $exercise.notes.length+1.toString()');
+    exercise.notes.add('');
     notifyListeners();
   }
 
