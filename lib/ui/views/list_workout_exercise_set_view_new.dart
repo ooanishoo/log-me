@@ -82,6 +82,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     Exercise exercise = model.currentWorkout.exercises[index];
     List<ExerciseSet> sets = exercise.exerciseSets;
     List<String> notes = exercise.notes;
+
     if (notes == null) {
       notes = [];
     }
@@ -192,8 +193,6 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                           Expanded(
                             child: Container(
                               alignment: Alignment.centerRight,
-                              // width: MediaQuery.of(context).size.width -
-                              //    (40 + 90 + 90 - 32),
                               child: Text('Actions'),
                             ),
                           ),
@@ -201,153 +200,123 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                       )),
                   Divider(),
                   Column(
-                      children: sets
-                          .map(
-                            (set) =>
-                                // Dismissible(
-                                //   onDismissed: (direction) {
-                                //     HapticFeedback.heavyImpact();
-                                //     model.removeSet(
-                                //         model.currentWorkout.exercises[index], set);
-                                //   },
-                                //   direction: DismissDirection.endToStart,
-                                //   key: UniqueKey(),
-                                //   background: Container(
-                                //     alignment: AlignmentDirectional.centerEnd,
-                                //     color: Colors.red,
-                                //     child: Padding(
-                                //       padding:
-                                //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                                //       child: Row(
-                                //         mainAxisAlignment: MainAxisAlignment.end,
-                                //         children: <Widget>[
-                                //           Icon(
-                                //             Icons.delete,
-                                //             color: Colors.white,
-                                //           ),
-                                //           Text('Delete'),
-                                //         ],
-                                //       ),
-                                //     ),
-                                //   ),
-                                //  child:
+                      children: sets.map((set) {
+                    var textEditingController1 = new TextEditingController(
+                        text: set.weight == null ? '' : set.weight.toString(),);
+                    var textEditingController2 = new TextEditingController(
+                        text: set.reps== null ? '' : set.reps.toString(),
+                    );
+
+                    FocusNode _focus1 = new FocusNode();
+                    FocusNode _focus2 = new FocusNode();
+                    return Container(
+                        decoration: BoxDecoration(
+                            color: set.isCheck
+                                ? Colors.grey[900]
+                                : Color(0xFF303030)),
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Form(
+                              child: Row(children: <Widget>[
                                 Container(
-                                    decoration: BoxDecoration(
-                                        color: set.isCheck
-                                            ? Colors.grey[900]
-                                            : Color(0xFF303030)),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 16.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Form(
-                                          child: Row(children: <Widget>[
-                                            Container(
-                                              width: 40,
-                                              alignment: Alignment.centerLeft,
-                                              child:
-                                                  _exerciseSetMenu(model, set),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 5),
-                                              margin: EdgeInsets.only(
-                                                  left: 5, right: 5),
-                                              width: 80,
-                                              child: TextField(
-                                                controller:
-                                                    TextEditingController(),
-                                                keyboardType: TextInputType
-                                                    .numberWithOptions(
-                                                        decimal: true),
-                                                decoration: InputDecoration(
-                                                  isDense: true,
+                                  width: 40,
+                                  alignment: Alignment.centerLeft,
+                                  child: _exerciseSetMenu(model, set),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 5),
+                                  margin: EdgeInsets.only(left: 5, right: 5),
+                                  width: 80,
+                                  child: TextField(
+                                    controller: textEditingController1,
+                                    onChanged: (value) {
+                                      model.updateWeight(
+                                          set,
+                                          double.parse(
+                                              textEditingController1.text));
+                                    },
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    decoration: InputDecoration(
+                                      isDense: true,
 
-                                                  //contentPadding:EdgeInsets.all(2),
-                                                  border: OutlineInputBorder(),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            color: Colors.white,
-                                                            width: 2.0),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.only(
-                                                  left: 5, right: 5),
-                                              width: 80,
-                                              child: TextField(
-                                                keyboardType: TextInputType
-                                                    .numberWithOptions(
-                                                        decimal: true),
-                                                decoration: InputDecoration(
-                                                  isDense: true,
-                                                  border: OutlineInputBorder(),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide:
-                                                        const BorderSide(
-                                                            color: Colors.white,
-                                                            width: 2.0),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerRight,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  (40 + 80 + 80 + 16 + 16 + 20),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: <Widget>[
-                                                  IconButton(
-                                                      icon: Icon(Icons.chat),
-                                                      onPressed: () {
-                                                        HapticFeedback
-                                                            .selectionClick();
-                                                      }),
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      color: set.isCheck
-                                                          ? Colors.green
-                                                          : Colors.grey[800],
-                                                      borderRadius:
-                                                          new BorderRadius.all(
-                                                              new Radius
-                                                                      .circular(
-                                                                  8.0)),
-                                                    ),
-                                                    child: IconButton(
-                                                      icon: Icon(Icons.done),
-                                                      onPressed: () {
-                                                        HapticFeedback
-                                                            .heavyImpact();
-
-                                                        this.setState(() {
-                                                          set.isCheck =
-                                                              !set.isCheck;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ]),
+                                      //contentPadding:EdgeInsets.all(2),
+                                      border: OutlineInputBorder(),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: Colors.white, width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 5, right: 5),
+                                  width: 80,
+                                  child: TextField(
+                                    controller: textEditingController2,
+                                    onChanged: (value) {
+                                      model.updateRep(
+                                          set,
+                                          int.parse(
+                                              textEditingController2.text));
+                                    },
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                            decimal: true),
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      border: OutlineInputBorder(),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: Colors.white, width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  width: MediaQuery.of(context).size.width -
+                                      (40 + 80 + 80 + 16 + 16 + 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      IconButton(
+                                          icon: Icon(Icons.chat),
+                                          onPressed: () {
+                                            HapticFeedback.selectionClick();
+                                          }),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: set.isCheck
+                                              ? Colors.green
+                                              : Colors.grey[800],
+                                          borderRadius: new BorderRadius.all(
+                                              new Radius.circular(8.0)),
                                         ),
-                                      ],
-                                    )),
-                            // ),
-                          )
-                          .toList()),
+                                        child: IconButton(
+                                          icon: Icon(Icons.done),
+                                          onPressed: () {
+                                            HapticFeedback.heavyImpact();
+
+                                            this.setState(() {
+                                              set.isCheck = !set.isCheck;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ]),
+                            ),
+                          ],
+                        ));
+                  }
+                          // ),
+                          ).toList()),
                 ],
               ),
             ),
@@ -406,6 +375,7 @@ Widget _actionMenu(WorkoutModel model, Exercise exercise) =>
 Widget _exerciseSetMenu(WorkoutModel model, ExerciseSet set) =>
     PopupMenuButton<String>(
       child: FlatButton(
+        onPressed: () {},
         child: Text(set.type == ExerciseSetType.workingSet
             ? set.index.toString()
             : describeEnum(set.type).toString().substring(0, 1).toUpperCase()),
