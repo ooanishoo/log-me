@@ -1,10 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 
 class ListExercise extends StatefulWidget {
   const ListExercise({Key key, this.filter, this.isSelectable = false})
@@ -61,6 +61,8 @@ class _ListExerciseState extends State<ListExercise> {
           dense: true,
           child: ListTile(
             title: new Text(exercise.name),
+            subtitle: new Text(
+                describeEnum(exercise.bodyPart).toString().toUpperCase()),
             onTap: () {
               HapticFeedback.selectionClick();
               if (widget.isSelectable) {
