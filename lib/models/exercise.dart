@@ -1,14 +1,25 @@
+import 'package:scoped_log_me/models/body_part.dart';
+import 'package:scoped_log_me/models/category.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 
 class Exercise {
+  int id;
   String name;
   bool isCheck;
   List<ExerciseSet> exerciseSets;
   List<String> notes;
-  Exercise prevExercise = null;
-  Exercise head = null;
+  Category category;
+  BodyPart bodyPart;
 
-  Exercise({this.name, this.isCheck = false, this.exerciseSets, this.notes});
+  Exercise(
+      {this.id,
+      this.name,
+      this.isCheck = false,
+      this.exerciseSets,
+      this.category,
+      this.bodyPart,
+      this.notes});
 
   Exercise.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -21,24 +32,23 @@ class Exercise {
     }
   }
 
-  newNode() {
-    Exercise newEx = new Exercise(name: this.name);
-    newEx.prevExercise = this;
-    this.head = newEx;
-    return newEx;
+  // Convert an Exercise object into a Map object
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+    if (id != null) {
+      map['id'] = id;
+    }
+    map['name'] = name;
+    map['category'] = EnumToString.parse(category);
+    map['bodyPart'] = EnumToString.parse(bodyPart);
+    return map;
   }
 
-  getPrevExercise() {
-    return this.prevExercise;
-  }
-
-  bool removePrevExercise() {
-    bool success = true;
-
-    (this.prevExercise != null) || (this.prevExercise.getPrevExercise() != null)
-        ? this.prevExercise.getPrevExercise()
-        : success = false;
-
-    return success;
+  // Extract an Exercise object from a Map object
+  Exercise.fromMap(Map<String, dynamic> map) {
+    this.id = map['id'];
+    this.name = map['name'];
+    this.category = EnumToString.fromString(Category.values, map['category']);
+    this.bodyPart = EnumToString.fromString(BodyPart.values, map['bodyPart']);
   }
 }
