@@ -67,4 +67,5 @@ class AppModel extends Model {
     _exercises = exerciseList;
     notifyListeners();
   }
+
 }

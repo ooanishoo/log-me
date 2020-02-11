@@ -11,8 +11,11 @@ class DatabaseHelper {
   String exerciseTable = 'exercise_table';
   String colId = 'id';
   String colName = 'name';
+  String colDate = 'date';
   String colCategory = 'category';
   String colBodyPart = 'bodyPart';
+  String colIsActive = 'isActive';
+  String workoutTable = 'workout_table';
 
   DatabaseHelper._createInstance(); // Named constructor to create instance of DatabaseHelper
 
@@ -43,7 +46,9 @@ class DatabaseHelper {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $exerciseTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colName TEXT, $colCategory TEXT, $colBodyPart TEXT)');
+      'CREATE TABLE $exerciseTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colName TEXT, $colCategory TEXT, $colBodyPart TEXT)',);
+    await db.execute(
+      'CREATE TABLE $workoutTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colName TEXT, $colIsActive TEXT, $colDate TEXT)',);
   }
 
   // Fetch Operation: Get all exercise objects from database

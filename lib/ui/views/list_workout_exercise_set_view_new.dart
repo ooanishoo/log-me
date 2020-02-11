@@ -7,6 +7,7 @@ import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
 
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
+import 'package:scoped_log_me/service_locator.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ListWorkoutExerciseSetNew extends StatefulWidget {
@@ -84,7 +85,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     List<String> notes = exercise.notes;
 
     if (notes == null) {
-      notes = [];
+      notes = new List<String>();
     }
 
     return Padding(
@@ -105,70 +106,73 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                     ),
                   ),
                   Column(
-                      children: notes
-                          .map(
-                            (note) => Slidable(
-                              actionPane: SlidableDrawerActionPane(),
-                              actionExtentRatio: 0.25,
-                              child: ListTile(
-                                title: TextField(
-                                  decoration:
-                                      InputDecoration(hintText: 'Add a note'),
-                                ),
-                              ),
-                              secondaryActions: <Widget>[
-                                SlideAction(
-                                    child: Container(
-                                        padding: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            shape: BoxShape.circle),
-                                        child: Icon(Icons.delete)),
-                                    //color: Color(0xFF303030),
-                                    color: Colors.grey[900],
-                                    onTap: () {
-                                      HapticFeedback.heavyImpact();
-                                      model.removeNoteFromExercise(
-                                          exercise, note.toString());
-                                    }),
-                              ],
-                            ),
-                            // Dismissible(
-                            //   onDismissed: (direction) {
-                            //     HapticFeedback.heavyImpact();
-                            //     model.removeNoteFromExercise(
-                            //         exercise, note.toString());
-                            //   },
-                            //   direction: DismissDirection.endToStart,
-                            //   key: UniqueKey(),
-                            //   background: Container(
-                            //     alignment: AlignmentDirectional.centerEnd,
-                            //     color: Colors.red,
-                            //     child: Padding(
-                            //       padding:
-                            //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                            //       child: Row(
-                            //         mainAxisAlignment: MainAxisAlignment.end,
-                            //         children: <Widget>[
-                            //           Icon(
-                            //             Icons.delete,
-                            //             color: Colors.white,
-                            //           ),
-                            //           Text('Delete'),
-                            //         ],
-                            //       ),
-                            //     ),
-                            //   ),
-                            //  child:
-                            //   ListTile(
-                            // title: TextField(
-                            //   decoration:
-                            //       InputDecoration(hintText: 'Add a note'),
-                            // ),
-                            //),
-                            //),
-                          )
-                          .toList()),
+                      children: notes.map((note) {
+                    var _controller = new TextEditingController(
+                        text: note == null ? '' : note);
+                    return Slidable(
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: ListTile(
+                        title: TextField(
+                          controller: _controller,
+                          onChanged: (value) {
+                            note = value;
+                          },
+                          decoration: InputDecoration(hintText: 'Add a note'),
+                        ),
+                      ),
+                      secondaryActions: <Widget>[
+                        SlideAction(
+                            child: Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    color: Colors.red, shape: BoxShape.circle),
+                                child: Icon(Icons.delete)),
+                            //color: Color(0xFF303030),
+                            color: Colors.grey[900],
+                            onTap: () {
+                              HapticFeedback.heavyImpact();
+                              model.removeNoteFromExercise(
+                                  exercise, note.toString());
+                            }),
+                      ],
+                    );
+                  }
+                          // Dismissible(
+                          //   onDismissed: (direction) {
+                          //     HapticFeedback.heavyImpact();
+                          //     model.removeNoteFromExercise(
+                          //         exercise, note.toString());
+                          //   },
+                          //   direction: DismissDirection.endToStart,
+                          //   key: UniqueKey(),
+                          //   background: Container(
+                          //     alignment: AlignmentDirectional.centerEnd,
+                          //     color: Colors.red,
+                          //     child: Padding(
+                          //       padding:
+                          //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                          //       child: Row(
+                          //         mainAxisAlignment: MainAxisAlignment.end,
+                          //         children: <Widget>[
+                          //           Icon(
+                          //             Icons.delete,
+                          //             color: Colors.white,
+                          //           ),
+                          //           Text('Delete'),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ),
+                          //  child:
+                          //   ListTile(
+                          // title: TextField(
+                          //   decoration:
+                          //       InputDecoration(hintText: 'Add a note'),
+                          // ),
+                          //),
+                          //),
+                          ).toList()),
                   Container(
                       padding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 16),
@@ -202,9 +206,10 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                   Column(
                       children: sets.map((set) {
                     var textEditingController1 = new TextEditingController(
-                        text: set.weight == null ? '' : set.weight.toString(),);
+                      text: set.weight == null ? '' : set.weight.toString(),
+                    );
                     var textEditingController2 = new TextEditingController(
-                        text: set.reps== null ? '' : set.reps.toString(),
+                      text: set.reps == null ? '' : set.reps.toString(),
                     );
 
                     FocusNode _focus1 = new FocusNode();
