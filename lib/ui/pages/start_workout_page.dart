@@ -6,7 +6,6 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_log_me/ui/pages/select_exercise_page.dart';
-import 'package:scoped_log_me/ui/views/list_workout_exercise_set_view.dart';
 
 class StartWorkoutPage extends StatefulWidget {
   StartWorkoutPage(

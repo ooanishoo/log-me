@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_log_me/service_locator.dart';
-import 'package:scoped_log_me/ui/pages/add_exercise_page.dart';
 import 'package:scoped_log_me/ui/pages/home_page.dart';
 import 'package:scoped_log_me/ui/pages/list_exercise_page.dart';
 import 'package:scoped_log_me/ui/pages/list_workout_page.dart';
