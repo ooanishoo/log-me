@@ -6,7 +6,6 @@ import 'package:scoped_log_me/ui/pages/add_exercise_page.dart';
 import 'package:scoped_log_me/ui/pages/select_exercise_page.dart';
 import 'package:scoped_log_me/ui/pages/list_workout_page.dart';
 import 'package:scoped_log_me/ui/pages/start_workout_page.dart';
-import 'package:scoped_log_me/ui/views/add_exercise_view.dart';
 import 'package:scoped_log_me/ui/views/display_exercise_view.dart';
 import 'package:scoped_log_me/ui/views/list_exercise_view.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -105,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              AddExercise(),
+              // AddExercise(),
               ListExercise(),
             ],
           )),

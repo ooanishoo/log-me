@@ -252,6 +252,7 @@ Widget _actionMenu(WorkoutModel model, Exercise exercise) =>
 Widget _exerciseSetMenu(WorkoutModel model, ExerciseSet set) =>
     PopupMenuButton<String>(
       child: FlatButton(
+        onPressed: () {},
         child: Text(set.type == ExerciseSetType.workingSet
             ? set.index.toString()
             : describeEnum(set.type).toString().substring(0, 1).toUpperCase()),

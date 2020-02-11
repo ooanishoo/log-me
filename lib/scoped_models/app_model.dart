@@ -1,3 +1,5 @@
+import 'package:scoped_log_me/helper/database_helper.dart';
+import 'package:scoped_log_me/models/category.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -7,6 +9,15 @@ class AppModel extends Model {
 
   List<Exercise> get exercises => this._exercises;
   List<Exercise> get selectedExercises => this._selectedExercises;
+
+  DatabaseHelper databaseHelper = DatabaseHelper();
+
+  void addExerciseToDB(Exercise exercise) async {
+    exercise.isCheck = false;
+    int result;
+    result = await databaseHelper.insertExercise(exercise);
+    print(result);
+  }
 
   void selectExercise(Exercise value) {
     selectedExercises.add(value);
@@ -26,58 +37,34 @@ class AppModel extends Model {
     notifyListeners();
   }
 
-  void addExercise(Exercise value) {
+  Future<void> addExercise(Exercise value) async {
     exercises.insert(0, value);
-    print(exercises.length.toString());
-    notifyListeners();
+    value.isCheck = false;
+    int result = await databaseHelper.insertExercise(value);
+    if (result != 0) {
+      notifyListeners();
+    }
   }
 
   void removeExercise(Exercise value) {
     exercises.remove(value);
+    databaseHelper.deleteExercise(value.id);
     notifyListeners();
   }
 
-  void getAllExercises() {
-    final List<Map<String, dynamic>> exercises = [
-      {"name": "barbell side split squat", "isCheck": false},
-      {"name": "barbell squat", "isCheck": false},
-      {"name": "barbell squat to a bench", "isCheck": false},
-      {"name": "barbell step ups", "isCheck": false},
-      {"name": "barbell walking lunge", "isCheck": false},
-      {"name": "battling ropes", "isCheck": false},
-      {"name": "bear crawl sled drags", "isCheck": false},
-      {"name": "behind head chest stretch", "isCheck": false},
-      {"name": "bench dips", "isCheck": false},
-      {"name": "bench jump", "isCheck": false},
-      {"name": "bench press - powerlifting", "isCheck": false},
-      {"name": "bench press - with bands", "isCheck": false},
-      {"name": "bench press with chains", "isCheck": false},
-      {"name": "bench sprint", "isCheck": false},
-      {"name": "bent over barbell row", "isCheck": false},
-      {"name": "bent over dumbbell", "isCheck": false},
-      {"name": "bent over low-pulley side lateral", "isCheck": false},
-      {"name": "bent over one-arm long bar row", "isCheck": false},
-      {"name": "bent over two-arm long bar row", "isCheck": false},
-      {"name": "bent over two-dumbbell row", "isCheck": false},
-      {"name": "bent over two-dumbbell row with palms in", "isCheck": false},
-      {"name": "bent press", "isCheck": false},
-      {"name": "bent-arm barbell pullover", "isCheck": false},
-      {"name": "bent-arm dumbbell pullover", "isCheck": false},
-      {"name": "bent-knee hip raise", "isCheck": false},
-      {"name": "bicycling", "isCheck": false},
-      {"name": "bicycling stationary", "isCheck": false},
-      {"name": "board press", "isCheck": false},
-      {"name": "body tricep press", "isCheck": false},
-      {"name": "body-up", "isCheck": false},
-      {"name": "bodyweight flyes", "isCheck": false},
-      {"name": "bodyweight mid row", "isCheck": false},
-      {"name": "bodyweight squat", "isCheck": false},
-      {"name": "bodyweight walking lunge", "isCheck": false},
-      {"name": "bosu ball cable crunch with side bends", "isCheck": false},
-      {"name": "bottoms up", "isCheck": false}
-    ];
+  void updateExerciseCategory(Exercise exercise, Category category) {
+    exercise.category = category;
+  }
 
-    exercises.forEach(
-        (exerciseJson) => _exercises.add(Exercise.fromJson(exerciseJson)));
+  void getAllExercises() async {
+    // Fetch all the exercises from database
+    List<Exercise> exerciseList = await databaseHelper.getExerciseList();
+
+    // Set isCheck to false for exercise selection
+    exerciseList.forEach((ex) => ex.isCheck = false);
+
+    // set the list to appModel's exerciseList
+    _exercises = exerciseList;
+    notifyListeners();
   }
 }
