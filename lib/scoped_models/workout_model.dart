@@ -79,10 +79,15 @@ class WorkoutModel extends Model {
     }
   }
 
-  void updateSet(ExerciseSet set, double value) {
+  void updateWeight(ExerciseSet set, double value) {
     print('value is $value');
     set.weight = value;
-    notifyListeners();
+    //notifyListeners();
+  }
+  void updateRep(ExerciseSet set, int value) {
+    print('value is $value');
+    set.reps = value;
+    //notifyListeners();
   }
 
   void updateSetType(ExerciseSet set, ExerciseSetType type) {
