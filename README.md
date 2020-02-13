@@ -1,16 +1,45 @@
-# scoped_log_me
-
-A new Flutter project.
-
+# Log Me
+Log Me is a workout tracker application built using flutter. The app allows a user to 
+    
+    - Add custom exercises
+    - Build custom workout routines 
+    - Track workouts.
+    
 ## Getting Started
+This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
 
-This project is a starting point for a Flutter application.
+## Installation
 
-A few resources to get you started if this is your first Flutter project:
+**Step 1:**
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Download or clone this repo by using the link below:
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+https://github.com/ooanishoo/log-me
+```
+
+**Step 2:**
+
+Go to project root folder
+``` 
+cd log-me
+```
+
+**Step 3:**
+
+Execute the following command in console to get the required dependencies: 
+
+``` 
+flutter pub get 
+```
+**Step 4:**
+
+Make sure you have a device (Simulator/Emulator/Actual Mobile) connected then run the app:
+
+``` 
+flutter run
+```
+
+
+### Found this project useful ❤️
+* Support by clicking the ⭐️: button on the upper right of this page.  ✌️
