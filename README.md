@@ -4,6 +4,8 @@ Log Me is a workout tracker application built using flutter. The app allows a us
     - Add custom exercises
     - Build custom workout routines 
     - Track workouts.
+    - Fetch history of all the tracked workouts.
+    - Save current workout as a routine for your next workout.
     
 ## Getting Started
 This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
@@ -40,6 +42,11 @@ Make sure you have a device (Simulator/Emulator/Actual Mobile) connected then ru
 flutter run
 ```
 
+### Libraries & Tools Used
+* [Scoped Model](https://pub.dev/packages/scoped_model) (State Management)
+* [Sembast](https://pub.dev/packages/sembast) (Database)
+* [Service Locator](https://pub.dev/packages/service_locator) (Provides service locator pattern implementation for dart.)
+* [Get It](https://pub.dev/packages/get_it) (Service Locator that allows to decouple the interface from a concrete implementation)
 
 ### Found this project useful ❤️
 * Support by clicking the ⭐️: button on the upper right of this page.  ✌️
