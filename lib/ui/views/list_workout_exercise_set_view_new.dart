@@ -33,12 +33,6 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
 
     WorkoutModel model = ScopedModel.of(context);
     if (model.currentWorkout.exercises == null) setupController();
-
-    //work on the controller
-    // model.currentWorkout.exercises.forEach((ex) {
-    //   return controllers.putIfAbsent(ex,
-    //       ex.exerciseSets.map((set) => list.add(new TextEditingController())));
-    // });
   }
 
   void setupController() {
@@ -81,7 +75,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
 
   Widget _exerciseSet(WorkoutModel model, int index) {
     Exercise exercise = model.currentWorkout.exercises[index];
-    List<ExerciseSet> sets = exercise.exerciseSets;
+    List<ExerciseSet> sets = exercise.exerciseSets ?? [];
     List<String> notes = exercise.notes;
 
     if (notes == null) {
