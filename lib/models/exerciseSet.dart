@@ -1,38 +1,41 @@
-enum ExerciseSetType { warmupSet, dropSet, failureSet, workingSet }
-
+import 'package:enum_to_string/enum_to_string.dart';
+import 'package:scoped_log_me/models/enums/exerciseSetType.dart';
 class ExerciseSet {
   int index;
   double weight;
   int reps;
   bool isCheck;
-  List<String> note;
+  List<String> notes;
   ExerciseSetType type;
 
   ExerciseSet(
       {this.index,
       this.weight,
       this.reps,
-      this.note,
+      this.notes,
       this.isCheck = false,
       this.type = ExerciseSetType.workingSet});
 
-  ExerciseSet.fromJson(Map<String, dynamic> json) {
-    index = json['index'];
-    weight = json['weight'];
-    reps = json['reps'];
-    isCheck = json['isCheck'];
-    type = json['type'];
-    note = json['note'].cast<String>();
+  ExerciseSet.fromMap(Map<String, dynamic> map) {
+    this.index = map['index'];
+    this.weight = map['weight'];
+    this.reps = map['reps'];
+    this.isCheck = map['isCheck'];
+    if(map['notes'] !=null){
+      this.notes = new List<String>();
+      map['notes'].forEach((v)=>notes.add(v.toString()));
+    }
+    this.type = EnumToString.fromString(ExerciseSetType.values, map['type']);
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['index'] = this.index;
-    data['weight'] = this.weight;
-    data['reps'] = this.reps;
-    data['isCheck'] = this.isCheck;
-    data['note'] = this.note;
-    data['type'] = this.type;
-    return data;
+  Map<String, dynamic> toMap() {
+    var map = Map<String, dynamic>();
+    map['index'] = this.index;
+    map['weight'] = this.weight;
+    map['reps'] = this.reps;
+    map['isCheck'] = this.isCheck;
+    map['note'] = this.notes;
+    map['type'] = EnumToString.parse(this.type);
+    return map;
   }
 }

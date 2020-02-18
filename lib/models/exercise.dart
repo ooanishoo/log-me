@@ -1,15 +1,15 @@
-import 'package:scoped_log_me/models/body_part.dart';
-import 'package:scoped_log_me/models/category.dart';
+import 'package:scoped_log_me/models/enums/body_part.dart';
+import 'package:scoped_log_me/models/enums/exercise_category.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 
-class Exercise {
+class Exercise{
   int id;
   String name;
   bool isCheck;
-  List<ExerciseSet> exerciseSets;
-  List<String> notes;
-  Category category;
+  List<ExerciseSet> exerciseSets=[];
+  List<String> notes=[];
+  ExerciseCategory exerciseCategory;
   BodyPart bodyPart;
 
   Exercise(
@@ -17,30 +17,20 @@ class Exercise {
       this.name,
       this.isCheck = false,
       this.exerciseSets,
-      this.category,
+      this.exerciseCategory,
       this.bodyPart,
       this.notes});
-
-  Exercise.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    isCheck = json['isCheck'];
-    if (json['exerciseSets'] != null) {
-      exerciseSets = new List<ExerciseSet>();
-      json['exerciseSets'].forEach((v) {
-        exerciseSets.add(new ExerciseSet.fromJson(v));
-      });
-    }
-  }
 
   // Convert an Exercise object into a Map object
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    if (id != null) {
-      map['id'] = id;
+    map['id'] = this.hashCode;
+    map['name'] = this.name;
+    map['exerciseCategory'] = EnumToString.parse(this.exerciseCategory);
+    map['bodyPart'] = EnumToString.parse(this.bodyPart);
+    if(this.exerciseSets != null){
+      map['exerciseSets'] = this.exerciseSets.map((exSet) => exSet.toMap()).toList();
     }
-    map['name'] = name;
-    map['category'] = EnumToString.parse(category);
-    map['bodyPart'] = EnumToString.parse(bodyPart);
     return map;
   }
 
@@ -48,7 +38,18 @@ class Exercise {
   Exercise.fromMap(Map<String, dynamic> map) {
     this.id = map['id'];
     this.name = map['name'];
-    this.category = EnumToString.fromString(Category.values, map['category']);
-    this.bodyPart = EnumToString.fromString(BodyPart.values, map['bodyPart']);
+
+    if (map['exerciseSets'] != null) {
+      exerciseSets = new List<ExerciseSet>();
+      map['exerciseSets'].forEach((v) {
+        exerciseSets.add(new ExerciseSet.fromMap(v));
+      });
+    }
+    if (map['exerciseCategory'] != null) {
+      this.exerciseCategory = EnumToString.fromString(ExerciseCategory.values, map['exerciseCategory']);
+    }
+    if (map['bodyPart'] != null) {
+      this.bodyPart = EnumToString.fromString(BodyPart.values, map['bodyPart']);
+    }
   }
 }
