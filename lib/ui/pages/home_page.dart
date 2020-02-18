@@ -28,7 +28,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     print('getting all the exercises');
+    widget.workoutModel.getCurrentWorkout();
     widget.model.getAllExercises();
+    if(widget.workoutModel.currentWorkout != null)
+        unfinishedWorkout = widget.workoutModel.currentWorkout.isActive;
+    print(this.unfinishedWorkout);
+    // widget.workoutModel.currentWorkout != null
+    //     ? unfinishedWorkout = widget.workoutModel.currentWorkout.isActive
+    //     : false;
   }
 
   @override
@@ -36,7 +43,10 @@ class _HomePageState extends State<HomePage> {
     return ScopedModel<AppModel>(
       model: widget.model,
       child: Scaffold(
-          appBar: AppBar(title: Text('Log me'), centerTitle: false,),
+          appBar: AppBar(
+            title: Text('Log me'),
+            centerTitle: false,
+          ),
           body: Column(
             children: [
               ButtonBar(
@@ -48,9 +58,10 @@ class _HomePageState extends State<HomePage> {
                       HapticFeedback.heavyImpact();
 
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              AddExercisePage(
-                                model: widget.model,exercise:new Exercise(),)));
+                          builder: (context) => AddExercisePage(
+                                model: widget.model,
+                                exercise: new Exercise(),
+                              )));
                     },
                   ),
                   RaisedButton(
@@ -79,8 +90,7 @@ class _HomePageState extends State<HomePage> {
                       HapticFeedback.heavyImpact();
 
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              ListWorkoutPage(
+                          builder: (context) => ListWorkoutPage(
                                 workoutModel: widget.workoutModel,
                                 model: widget.model,
                               )));
