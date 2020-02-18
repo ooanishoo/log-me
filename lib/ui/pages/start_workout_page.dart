@@ -27,7 +27,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Start workout Page'),
+        title: Text('Start Workout'),
       ),
       body: Column(
         children: <Widget>[
@@ -48,13 +48,13 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0)),
                       child: Text('Finish'),
-                      color: Colors.green,
+                      color: Theme.of(context).accentColor,
                       disabledColor: Colors.green,
                       disabledTextColor: Colors.white,
                       textColor: Colors.white,
-                      onPressed: () {
+                      onPressed: () async{
                         HapticFeedback.heavyImpact();
-                        model.finishWorkout();
+                        await model.finishWorkout();
                         widget.onFinish();
                         Navigator.of(context).pop();
                       }),
