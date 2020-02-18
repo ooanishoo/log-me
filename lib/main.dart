@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_log_me/controller/NavigationController.dart';
+import 'custom_theme.dart';
 import 'service_locator.dart';
+import 'package:scoped_log_me/controller/NavigationController.dart';
 
 void main() {
   setupLocator();
@@ -8,11 +9,13 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  bool mode;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark(),
-      title: 'Material App',
+    return new MaterialApp(
+      title: 'Flutter Demo',
+      theme: CustomTheme(context),
       home: NavigationController(),
     );
   }
