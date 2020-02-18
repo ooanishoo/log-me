@@ -14,12 +14,17 @@ class WorkoutModel extends Model {
 
   WorkoutModel();
 
+  Future<Workout> getCurrentWorkout() async {
+    return this.currentWorkout = await dbHelper.getCurrentWorkout();
+  }
+
   void startWorkout() {
     // set new workout object as currentWorkout
     String name = Random().nextInt(100).toString();
     currentWorkout = new Workout(
       name: 'Workout $name',
       date: new DateTime.now(),
+      isActive: true,
       exercises: [],
     );
 
@@ -40,13 +45,15 @@ class WorkoutModel extends Model {
     notifyListeners();
   }
 
-  Future<void> finishWorkout() async{
+  Future<void> finishWorkout() async {
+    currentWorkout.isActive = false;
     workouts.add(currentWorkout);
     //dbHelper.insertWorkout(currentWorkout);
 
     dbHelper.updateWorkout(currentWorkout);
   }
-  Future<void> saveWorkout() async{
+
+  Future<void> saveWorkout() async {
     //workouts.add(currentWorkout);
     //dbHelper.insertWorkout(currentWorkout);
 
@@ -79,13 +86,19 @@ class WorkoutModel extends Model {
     initializeFirstSet(selectedExercises);
     currentWorkout.exercises.addAll(selectedExercises);
     selectedExercises.clear();
+
+    // Save the workout to db when exercise/s added
+    saveWorkout();
     notifyListeners();
   }
 
   void removeExercise(Exercise value) {
-    if (currentWorkout.exercises.contains(value))
+    if (currentWorkout.exercises.contains(value)) {
       currentWorkout.exercises.remove(value);
-    notifyListeners();
+      // Save the workout to db when checked
+      saveWorkout();
+      notifyListeners();
+    }
   }
 
   void initializeFirstSet(List<Exercise> exercises) {
@@ -97,15 +110,22 @@ class WorkoutModel extends Model {
     if (exercise.exerciseSets == null) {
       exercise.exerciseSets = new List<ExerciseSet>();
     }
-    exercise.exerciseSets.add(
-      ExerciseSet(index: exercise.exerciseSets.length + 1)
-    );
+    exercise.exerciseSets
+        .add(ExerciseSet(index: exercise.exerciseSets.length + 1));
+    // Save the workout to db when checked
+    saveWorkout();
     notifyListeners();
+  }
+
+  void completeSet() {
+
   }
 
   void removeSet(Exercise exercise, ExerciseSet set) {
     if (exercise.exerciseSets.contains(set)) {
       exercise.exerciseSets.remove(set);
+      // Save the workout to db when checked
+      saveWorkout();
       notifyListeners();
     }
   }
