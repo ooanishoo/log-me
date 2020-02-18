@@ -5,9 +5,9 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
+import 'package:scoped_log_me/models/enums/exerciseSetType.dart';
 
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
-import 'package:scoped_log_me/service_locator.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ListWorkoutExerciseSetNew extends StatefulWidget {
@@ -33,12 +33,6 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
 
     WorkoutModel model = ScopedModel.of(context);
     if (model.currentWorkout.exercises == null) setupController();
-
-    //work on the controller
-    // model.currentWorkout.exercises.forEach((ex) {
-    //   return controllers.putIfAbsent(ex,
-    //       ex.exerciseSets.map((set) => list.add(new TextEditingController())));
-    // });
   }
 
   void setupController() {
@@ -81,8 +75,8 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
 
   Widget _exerciseSet(WorkoutModel model, int index) {
     Exercise exercise = model.currentWorkout.exercises[index];
-    List<ExerciseSet> sets = exercise.exerciseSets;
-    List<String> notes = exercise.notes;
+    List<ExerciseSet> sets = exercise.exerciseSets ?? [];
+    List<String> notes = exercise.notes ?? [];
 
     if (notes == null) {
       notes = new List<String>();
@@ -128,7 +122,6 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                 decoration: BoxDecoration(
                                     color: Colors.red, shape: BoxShape.circle),
                                 child: Icon(Icons.delete)),
-                            //color: Color(0xFF303030),
                             color: Colors.grey[900],
                             onTap: () {
                               HapticFeedback.heavyImpact();
@@ -216,9 +209,10 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                     FocusNode _focus2 = new FocusNode();
                     return Container(
                         decoration: BoxDecoration(
-                            color: set.isCheck
-                                ? Colors.grey[900]
-                                : Color(0xFF303030)),
+                          color: set.isCheck ?
+                          Theme.of(context).primaryColorLight:
+                          Theme.of(context).scaffoldBackgroundColor,
+                        ),
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -235,6 +229,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                   margin: EdgeInsets.only(left: 5, right: 5),
                                   width: 80,
                                   child: TextField(
+                                    //focusNode: _focus1,
                                     controller: textEditingController1,
                                     onChanged: (value) {
                                       model.updateWeight(
@@ -289,6 +284,12 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
                                       IconButton(
+                                          icon: Icon(Icons.delete),
+                                          onPressed: () {
+                                            HapticFeedback.selectionClick();
+                                            model.removeSet(exercise,set);
+                                          }),
+                                      IconButton(
                                           icon: Icon(Icons.chat),
                                           onPressed: () {
                                             HapticFeedback.selectionClick();
@@ -296,16 +297,18 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                       Container(
                                         decoration: BoxDecoration(
                                           color: set.isCheck
-                                              ? Colors.green
-                                              : Colors.grey[800],
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context).iconTheme.color,
                                           borderRadius: new BorderRadius.all(
                                               new Radius.circular(8.0)),
                                         ),
                                         child: IconButton(
-                                          icon: Icon(Icons.done),
+                                          icon: Icon(
+                                            Icons.done,
+                                            color: Theme.of(context).buttonColor,
+                                          ),
                                           onPressed: () {
                                             HapticFeedback.heavyImpact();
-
                                             this.setState(() {
                                               set.isCheck = !set.isCheck;
                                             });
@@ -327,12 +330,21 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
             ),
             //),
             ListTile(
-              trailing: RaisedButton(
+              trailing: FlatButton(
+                shape: RoundedRectangleBorder(
+
+                  borderRadius: BorderRadius.circular(8.0),
+                  side: BorderSide(
+                    style:BorderStyle.solid,
+                    color: Theme.of(context).iconTheme.color,
+                  )
+                ),
                 child: Text(
                   'Add set',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color: Theme.of(context).buttonColor),
                 ),
-                color: Colors.grey,
+
+                //color: Colors.grey,
                 onPressed: () {
                   model.addSet(model.currentWorkout.exercises[index]);
                   HapticFeedback.heavyImpact();

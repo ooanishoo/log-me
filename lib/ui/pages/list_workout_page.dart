@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_log_me/models/exercise.dart';
+import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/ui/views/list_workout_view.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 
 class ListWorkoutPage extends StatefulWidget {
-  const ListWorkoutPage({Key key, this.model}) : super(key: key);
+  const ListWorkoutPage({Key key, this.model, this.workoutModel}) : super(key: key);
 
-  final WorkoutModel model;
+  final WorkoutModel workoutModel;
+  final AppModel model;
 
   @override
   ListWorkoutPageState createState() => ListWorkoutPageState();
@@ -21,6 +23,8 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
   @override
   void initState() {
     super.initState();
+    print('getting all the workouts');
+    widget.workoutModel.getAllWorkouts();
     _controller.addListener(() {
       print('listening');
       setState(() => filter = _controller.text);
@@ -37,13 +41,14 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Completed Workouts Page'),
+          title: Text('History'),
+          centerTitle: false,
         ),
         body: Column(
           children: <Widget>[
             // Exercise List
             ScopedModel<WorkoutModel>(
-              model: widget.model,
+              model: widget.workoutModel,
               child: ListWorkout(filter: filter),
             ),
           ],

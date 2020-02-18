@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_log_me/ui/pages/add_exercise_page.dart';
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     return ScopedModel<AppModel>(
       model: widget.model,
       child: Scaffold(
-          appBar: AppBar(title: Text('Log me')),
+          appBar: AppBar(title: Text('Log me'), centerTitle: false,),
           body: Column(
             children: [
               ButtonBar(
@@ -48,7 +49,8 @@ class _HomePageState extends State<HomePage> {
 
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              AddExercisePage(model: widget.model)));
+                              AddExercisePage(
+                                model: widget.model,exercise:new Exercise(),)));
                     },
                   ),
                   RaisedButton(
@@ -78,7 +80,10 @@ class _HomePageState extends State<HomePage> {
 
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              ListWorkoutPage(model: widget.workoutModel)));
+                              ListWorkoutPage(
+                                workoutModel: widget.workoutModel,
+                                model: widget.model,
+                              )));
                     },
                   ),
                   RaisedButton(

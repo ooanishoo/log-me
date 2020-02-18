@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
+import 'package:scoped_log_me/models/enums/exerciseSetType.dart';
 
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_model/scoped_model.dart';

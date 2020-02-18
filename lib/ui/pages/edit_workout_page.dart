@@ -7,27 +7,27 @@ import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_log_me/ui/pages/select_exercise_page.dart';
 
-class StartWorkoutPage extends StatefulWidget {
-  StartWorkoutPage(
-      {Key key, this.workoutModel, this.model, this.onCancel, this.onFinish})
+class EditWorkoutPage extends StatefulWidget {
+  EditWorkoutPage(
+      {Key key, this.workoutModel, this.model, this.onCancel, this.onSave})
       : super(key: key);
 
   final WorkoutModel workoutModel;
   final AppModel model;
   final VoidCallback onCancel;
-  final VoidCallback onFinish;
+  final VoidCallback onSave;
   @override
-  _StartWorkoutPageState createState() => _StartWorkoutPageState();
+  _EditWorkoutPageState createState() => _EditWorkoutPageState();
 }
 
-class _StartWorkoutPageState extends State<StartWorkoutPage> {
+class _EditWorkoutPageState extends State<EditWorkoutPage> {
   TextEditingController _workoutNameController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Start Workout'),
+        title: Text('Edit Workout'),
       ),
       body: Column(
         children: <Widget>[
@@ -38,7 +38,6 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                 _workoutNameController.text = model.currentWorkout.name;
 
                 return ListTile(
-                  //title: Text(model.currentWorkout.name),
                   title: TextField(
                     controller: _workoutNameController,
                     onChanged: ((value) => model.currentWorkout.name = value),
@@ -47,15 +46,14 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                   trailing: RaisedButton(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0)),
-                      child: Text('Finish'),
-                      color: Theme.of(context).accentColor,
+                      child: Text('Save'),
+                      color: Colors.green,
                       disabledColor: Colors.green,
                       disabledTextColor: Colors.white,
                       textColor: Colors.white,
                       onPressed: () async{
                         HapticFeedback.heavyImpact();
-                        await model.finishWorkout();
-                        widget.onFinish();
+                        await model.saveWorkout();
                         Navigator.of(context).pop();
                       }),
                 );

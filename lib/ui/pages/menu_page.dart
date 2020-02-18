@@ -8,16 +8,26 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu Page'),
+        title: Text('Menu'),
+        centerTitle: false,
       ),
-      body: Center(
-        child: Container(
-          child: Text('Menu Page'),
-        ),
+      body: ListView.builder(
+        itemCount: 8,
+        itemBuilder: (BuildContext context, int index) {
+        return ListTile(
+          title: Text('Menu $index'),
+        );
+       },
       ),
     );
   }

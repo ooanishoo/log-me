@@ -23,7 +23,8 @@ class _NavigationControllerState extends State<NavigationController> {
     ),
     ListWorkoutPage(
       key: PageStorageKey('Page3'),
-      model: locator<WorkoutModel>(),
+      workoutModel: locator<WorkoutModel>(),
+      model: locator<AppModel>(),
     ),
     HomePage(
       key: PageStorageKey('Page2'),
@@ -51,6 +52,9 @@ class _NavigationControllerState extends State<NavigationController> {
 
   Widget _bottomNavigationBar(int _selectedIndex) {
     return BottomNavigationBar(
+      backgroundColor: Colors.black,
+      selectedItemColor: Theme.of(context).buttonColor,
+      unselectedItemColor: Theme.of(context).disabledColor,
       type: BottomNavigationBarType.fixed, // added to show more than 3 items
       currentIndex: _selectedIndex,
       onTap: _changePage,

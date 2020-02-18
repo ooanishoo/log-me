@@ -4,14 +4,20 @@ import 'package:flutter/services.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 
 import 'package:scoped_log_me/scoped_models/app_model.dart';
+import 'package:scoped_log_me/ui/pages/add_exercise_page.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ListExercise extends StatefulWidget {
-  const ListExercise({Key key, this.filter, this.isSelectable = false})
+  const ListExercise(
+      {Key key,
+      this.filter,
+      this.isSelectable = false,
+      this.hasActions = false})
       : super(key: key);
 
   final String filter;
   final bool isSelectable;
+  final bool hasActions;
 
   @override
   _ListExerciseState createState() => _ListExerciseState();
@@ -29,7 +35,11 @@ class _ListExerciseState extends State<ListExercise> {
           onPanDown: (_) {
             FocusScope.of(context).requestFocus(FocusNode());
           },
-          child: ListView.builder(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: Divider(height: 0),
+            ),
             itemCount: model.exercises.length,
             itemBuilder: (context, index) {
               // store the object to a local variable
@@ -56,16 +66,19 @@ class _ListExerciseState extends State<ListExercise> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 1),
       child: Ink(
-        color: exercise.isCheck ? Colors.grey[900] : Color(0xFF303030),
+        color: exercise.isCheck ?
+        Theme.of(context).primaryColorLight:
+        Theme.of(context).primaryColor,
+
         child: ListTileTheme(
           dense: true,
           child: ListTile(
-            title: new Text(exercise.name),
+            title: new Text(exercise.name ?? 'No name'),
             subtitle: new Text(
                 describeEnum(exercise.bodyPart).toString().toUpperCase()),
             onTap: () {
               HapticFeedback.selectionClick();
-              if (widget.isSelectable) {
+              if (widget.isSelectable && !widget.hasActions) {
                 setState(() {
                   exercise.isCheck = !exercise.isCheck;
 
@@ -87,12 +100,35 @@ class _ListExerciseState extends State<ListExercise> {
                 });
               }
             },
-            trailing: exercise.isCheck
-                ? Icon(
-                    Icons.done,
-                    color: Colors.teal,
+            trailing: (widget.hasActions && !widget.isSelectable)
+                ? ButtonBar(
+                    alignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: (() => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => AddExercisePage(
+                                    model: model,
+                                    title: 'Edit Exercise',
+                                    isUpdateMode: true,
+                                    exercise: exercise)))),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: (() {
+                          model.removeExercise(exercise);
+                        }),
+                      ),
+                    ],
                   )
-                : Container(width: 1),
+                : exercise.isCheck
+                    ? Icon(
+                        Icons.done,
+                        color: Theme.of(context).accentColor
+                      )
+                    : Container(width: 1),
           ),
         ),
       ),
