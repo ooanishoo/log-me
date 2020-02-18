@@ -1,3 +1,4 @@
+import 'package:uuid/uuid.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 
 class Workout {
@@ -10,11 +11,14 @@ class Workout {
   List get getExercise => exercises;
   set setExercise(List<Exercise> value) => this.exercises = value;
 
+  //const uuid = const Uuid();
+
   Workout({
+    //this.id = uuid.v4(),
     this.id,
     this.name,
     this.exercises,
-    this.isActive = true,
+    this.isActive = false,
     this.date,
   });
 
