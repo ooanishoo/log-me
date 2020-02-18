@@ -8,7 +8,6 @@ import 'package:path/path.dart';
 import 'dart:async';
 
 class DbHelper {
-
   static DbHelper _dbHelper;
   static Database _db;
 
@@ -55,10 +54,8 @@ class DbHelper {
     return database;
   }
 
-
   Future initExercises() async {
     await _db.transaction((txn) async {
-
       await _exerciseStore.add(txn, {'name': 'fish'});
     });
   }
@@ -66,6 +63,7 @@ class DbHelper {
   Future insert(Exercise exercise) async {
     await _exerciseStore.add(await db, exercise.toMap());
   }
+
   Future insertWorkout(Workout workout) async {
     await _workoutStore.add(await db, workout.toMap());
   }
@@ -77,6 +75,7 @@ class DbHelper {
       finder: finder,
     );
   }
+
   Future deleteWorkout(Workout workout) async {
     final finder = Finder(filter: Filter.byKey(workout.id));
     await _workoutStore.delete(
@@ -107,10 +106,9 @@ class DbHelper {
     );
   }
 
-
   Future<List<Exercise>> getAllExercises() async {
-    final finder = Finder( sortOrders: [SortOrder('name')]);
-    final snapshot = await _exerciseStore.find(await db, finder:finder);
+    final finder = Finder(sortOrders: [SortOrder('name')]);
+    final snapshot = await _exerciseStore.find(await db, finder: finder);
 
     return snapshot.map((map) {
       final exercise = Exercise.fromMap(map.value);
@@ -119,10 +117,13 @@ class DbHelper {
       return exercise;
     }).toList();
   }
-  Future<List<Workout>> getAllWorkouts() async {
-    final finder = Finder( sortOrders: [SortOrder('date')]);
 
-    final snapshot = await _workoutStore.find(await db, finder:finder);
+  Future<List<Workout>> getAllWorkouts() async {
+    final finder = Finder(
+        filter: Filter.equals('isActive', false),
+        sortOrders: [SortOrder('date')]);
+
+    final snapshot = await _workoutStore.find(await db, finder: finder);
 
     return snapshot.map((map) {
       final workout = Workout.fromMap(map.value);
@@ -130,5 +131,20 @@ class DbHelper {
       workout.id = map.key;
       return workout;
     }).toList();
+  }
+
+  Future<Workout> getCurrentWorkout() async {
+    final finder = Finder(filter: Filter.equals('isActive', true));
+
+    final snapshot = await _workoutStore.findFirst(await db, finder: finder);
+    if (snapshot != null) {
+      final workout = Workout.fromMap(snapshot.value);
+      workout.id = snapshot.key;
+      print('Current workout NAME ::' + workout.name.toString());
+      return workout;
+    } else {
+      print('No Current workout');
+      return null;
+    }
   }
 }
