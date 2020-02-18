@@ -18,7 +18,7 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <exerciseCategory android:name="android.intent.exerciseCategory.LAUNCHER"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
