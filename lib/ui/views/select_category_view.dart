@@ -1,5 +1,8 @@
+import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:scoped_log_me/models/category.dart';
+import 'package:scoped_log_me/models/enums/body_part.dart';
+import 'package:scoped_log_me/models/enums/exercise_category.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 
 class SelectExerciseCategory extends StatefulWidget {
@@ -10,41 +13,58 @@ class SelectExerciseCategory extends StatefulWidget {
   final Function onSelection;
 
   @override
-  _SelectExerciseCategoryState createState() => _SelectExerciseCategoryState();
+  _SelectExerciseCategoryState createState() =>
+      _SelectExerciseCategoryState(exercise);
 }
 
 class _SelectExerciseCategoryState extends State<SelectExerciseCategory> {
+  final Exercise exercise;
+  String selectedCategory;
+  List<String> categories = [];
+
   final expansionTile = new GlobalKey();
-  String selectedCategory = 'Exercise Category';
-  List<String> categories = [
-    'barbell',
-    'dumbbell',
-    'machine',
-    'cardio',
-    'duration',
-    'reps_only'
-  ];
+
+  _SelectExerciseCategoryState(this.exercise);
+
+  @override
+  void initState() {
+    super.initState();
+    exercise.exerciseCategory == null
+        ? this.selectedCategory = 'Exercise Category'
+        : this.selectedCategory = EnumToString.parse(exercise.exerciseCategory);
+    getExerciseCategories();
+  }
+
+  void getExerciseCategories() {
+    ExerciseCategory.values.forEach((v) => this.categories.add(describeEnum(v).toString()));
+  }
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
         key: GlobalKey(),
-        title: new Text(this.selectedCategory),
+        title: new Text(this.selectedCategory.firstLetterToUpper()),
         backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
         children: categories
-            .map((category) => ListTileTheme(
-                  dense: true,
-                  child: ListTile(
-                    title: Text(category.firstLetterToUpper()),
-                    onTap: () {
-                      setState(() {
-                        this.selectedCategory = category;
+            .map((exerciseCategory) => Visibility(
+                  visible:
+                      this.selectedCategory == exerciseCategory ? false : true,
+                  child: ListTileTheme(
+                    dense: true,
+                    child: ListTile(
+                      title: Text(exerciseCategory.firstLetterToUpper()),
+                      onTap: () {
+                        setState(() {
+                          this.selectedCategory = exerciseCategory;
 
-                        Category cat = Category.values.firstWhere((value) =>
-                            value.toString() == 'Category.' + category);
-                        widget.onSelection(cat);
-                      });
-                    },
+                          ExerciseCategory cat = ExerciseCategory.values
+                              .firstWhere((value) =>
+                                  value.toString() ==
+                                  'ExerciseCategory.' + exerciseCategory);
+                          widget.onSelection(cat);
+                        });
+                      },
+                    ),
                   ),
                 ))
             .toList());
