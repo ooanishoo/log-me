@@ -1,5 +1,5 @@
-import 'package:scoped_log_me/helper/database_helper.dart';
-import 'package:scoped_log_me/models/category.dart';
+import 'package:scoped_log_me/helper/database.dart';
+import 'package:scoped_log_me/models/enums/exercise_category.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -10,13 +10,10 @@ class AppModel extends Model {
   List<Exercise> get exercises => this._exercises;
   List<Exercise> get selectedExercises => this._selectedExercises;
 
-  DatabaseHelper databaseHelper = DatabaseHelper();
+  DbHelper dbHelper = DbHelper();
 
-  void addExerciseToDB(Exercise exercise) async {
-    exercise.isCheck = false;
-    int result;
-    result = await databaseHelper.insertExercise(exercise);
-    print(result);
+  AppModel() {
+    this.getAllExercises();
   }
 
   void selectExercise(Exercise value) {
@@ -40,25 +37,41 @@ class AppModel extends Model {
   Future<void> addExercise(Exercise value) async {
     exercises.insert(0, value);
     value.isCheck = false;
-    int result = await databaseHelper.insertExercise(value);
-    if (result != 0) {
-      notifyListeners();
-    }
+    // int result = await databaseHelper.insertExercise(value);
+    dbHelper.insert(value);
+    //dbHelper.insert2(value);
+    notifyListeners();
+
+    // if (result != 0) {
+    //   notifyListeners();
+    // }
+  }
+
+  Future<void> updateExercise(Exercise value) async {
+    value.isCheck = false;
+    dbHelper.update(value);
+    //notifyListeners();
   }
 
   void removeExercise(Exercise value) {
     exercises.remove(value);
-    databaseHelper.deleteExercise(value.id);
+    dbHelper.delete(value);
     notifyListeners();
   }
 
-  void updateExerciseCategory(Exercise exercise, Category category) {
-    exercise.category = category;
+  void updateExerciseCategory(Exercise exercise, ExerciseCategory exerciseCategory) {
+    exercise.exerciseCategory = exerciseCategory;
   }
 
   void getAllExercises() async {
     // Fetch all the exercises from database
-    List<Exercise> exerciseList = await databaseHelper.getExerciseList();
+    // List<Exercise> exerciseList2 = await databaseHelper.getExerciseList();
+
+    // Fetch all the exercises from database
+    List<Exercise> exerciseList = await dbHelper.getAllExercises();
+
+    print('size is ************');
+    print(exerciseList.length.toString());
 
     // Set isCheck to false for exercise selection
     exerciseList.forEach((ex) => ex.isCheck = false);
@@ -67,5 +80,4 @@ class AppModel extends Model {
     _exercises = exerciseList;
     notifyListeners();
   }
-
 }
