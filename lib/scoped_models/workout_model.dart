@@ -1,3 +1,5 @@
+import 'package:scoped_log_me/helper/database.dart';
+import 'package:scoped_log_me/models/enums/exerciseSetType.dart';
 import 'package:scoped_log_me/models/workout.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
@@ -8,6 +10,9 @@ class WorkoutModel extends Model {
   Workout currentWorkout;
   List<Exercise> selectedExercises = [];
   List<Workout> workouts = [];
+  DbHelper dbHelper = DbHelper();
+
+  WorkoutModel();
 
   void startWorkout() {
     // set new workout object as currentWorkout
@@ -17,17 +22,41 @@ class WorkoutModel extends Model {
       date: new DateTime.now(),
       exercises: [],
     );
+
+    dbHelper.insertWorkout(currentWorkout);
     print('Workout name is ::' + name);
     notifyListeners();
   }
 
-  void finishWorkout() {
+  void getAllWorkouts() async {
+    // Fetch all the exercises from database
+    List<Workout> workoutList = await dbHelper.getAllWorkouts();
+
+    print('size is ************');
+    print(workoutList.length.toString());
+
+    // set the list to appModel's exerciseList
+    workouts = workoutList;
+    notifyListeners();
+  }
+
+  Future<void> finishWorkout() async{
     workouts.add(currentWorkout);
-    currentWorkout = null;
+    //dbHelper.insertWorkout(currentWorkout);
+
+    dbHelper.updateWorkout(currentWorkout);
+  }
+  Future<void> saveWorkout() async{
+    //workouts.add(currentWorkout);
+    //dbHelper.insertWorkout(currentWorkout);
+
+    dbHelper.updateWorkout(currentWorkout);
+    //currentWorkout = null;
   }
 
   void cancelWorkout() {
     print('cancelling workout');
+    dbHelper.deleteWorkout(currentWorkout);
     currentWorkout = null;
   }
 
@@ -65,11 +94,13 @@ class WorkoutModel extends Model {
   }
 
   void addSet(Exercise exercise) {
-    if (exercise.exerciseSets != null) {
-      exercise.exerciseSets
-          .add(ExerciseSet(index: exercise.exerciseSets.length + 1));
-      notifyListeners();
+    if (exercise.exerciseSets == null) {
+      exercise.exerciseSets = new List<ExerciseSet>();
     }
+    exercise.exerciseSets.add(
+      ExerciseSet(index: exercise.exerciseSets.length + 1)
+    );
+    notifyListeners();
   }
 
   void removeSet(Exercise exercise, ExerciseSet set) {
@@ -84,6 +115,7 @@ class WorkoutModel extends Model {
     set.weight = value;
     //notifyListeners();
   }
+
   void updateRep(ExerciseSet set, int value) {
     print('value is $value');
     set.reps = value;
