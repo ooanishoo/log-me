@@ -52,7 +52,10 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) =>
-                            AddExercisePage(model: widget.model)));
+                            AddExercisePage(
+                              model: widget.model,
+                              exercise: new Exercise(),
+                            )));
                   },
                 )),
           ],

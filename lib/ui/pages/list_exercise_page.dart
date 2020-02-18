@@ -18,12 +18,14 @@ class _ListExercisePageState extends State<ListExercisePage> {
   TextEditingController _controller = new TextEditingController();
   String filter = '';
   List<Exercise> selectedExercises = [];
+  bool tapped = false;
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(() {
       print('listening');
+      print(_controller.text.length);
       setState(() => filter = _controller.text);
     });
   }
@@ -39,6 +41,7 @@ class _ListExercisePageState extends State<ListExercisePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Exercises'),
+          centerTitle: false,
           actions: <Widget>[
             Padding(
                 padding: EdgeInsets.all(8.0),
@@ -46,8 +49,8 @@ class _ListExercisePageState extends State<ListExercisePage> {
                   icon: Icon(Icons.add),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            AddExercisePage(model: widget.model)));
+                        builder: (context) => AddExercisePage(
+                            model: widget.model, exercise: new Exercise())));
                   },
                 )),
           ],
@@ -61,6 +64,7 @@ class _ListExercisePageState extends State<ListExercisePage> {
               model: widget.model,
               child: ListExercise(
                 filter: filter,
+                hasActions: true,
               ),
             ),
           ],
@@ -69,17 +73,57 @@ class _ListExercisePageState extends State<ListExercisePage> {
 
   Widget searchBar() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        onChanged: (text) {
-          print(text);
-        },
-        controller: _controller,
-        decoration: InputDecoration(
-            hintText: "Search",
-            prefixIcon: Icon(Icons.search),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+      padding: const EdgeInsets.all(0.0),
+      child: ListTile(
+        title: TextField(
+          onChanged: (text) {
+            print(text);
+          },
+          onTap: (() => this.tapped = true),
+          controller: _controller,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Theme.of(context).primaryColorLight,
+            hintText: "Search Exercise",
+            hintStyle: TextStyle(
+              color: Theme.of(context).accentTextTheme.title.color,
+            ),
+            suffixIcon: this._controller.text.length == 0
+                ? Container(
+                    width: 0,
+                  )
+                : IconButton(
+                    icon: Icon(Icons.cancel),
+                    color: Theme.of(context).accentIconTheme.color,
+                    onPressed: (() => setState(() => _controller.clear())),
+                  ),
+            prefixIcon: IconButton(
+              icon: Icon(Icons.search),
+              onPressed: null,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              borderSide: BorderSide(
+                color: Theme.of(context).primaryColorLight,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              borderSide: BorderSide(
+                color: Theme.of(context).primaryColorLight,
+              ),
+            ),
+          ),
+        ),
+        trailing: this.tapped == true
+            ? FlatButton(
+                child: Text('Cancel'),
+                onPressed: (() {
+                  _controller.clear(); // clear the text in searchBar
+                  FocusScope.of(context).unfocus(); // hide the keyboard
+                }),
+              )
+            : Container(width: 0),
       ),
     );
   }
