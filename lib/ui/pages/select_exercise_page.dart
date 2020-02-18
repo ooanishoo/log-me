@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scoped_log_me/models/exercise.dart';
@@ -51,10 +53,11 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
                   icon: Icon(Icons.add),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            AddExercisePage(
+                        builder: (context) => AddExercisePage(
                               model: widget.model,
-                              exercise: new Exercise(),
+                              exercise: new Exercise(
+                                id: Random().nextInt(1000000),
+                              ),
                             )));
                   },
                 )),
@@ -67,7 +70,7 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
             // Exercise List
             ScopedModel<AppModel>(
               model: widget.model,
-              child: ListExercise(filter: filter, isSelectable:true ),
+              child: ListExercise(filter: filter, isSelectable: true),
             ),
             // Add Buttons
             ScopedModel<AppModel>(

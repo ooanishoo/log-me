@@ -3,12 +3,12 @@ import 'package:scoped_log_me/models/enums/exercise_category.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 
-class Exercise{
+class Exercise {
   int id;
   String name;
   bool isCheck;
-  List<ExerciseSet> exerciseSets=[];
-  List<String> notes=[];
+  List<ExerciseSet> exerciseSets = [];
+  List<String> notes = [];
   ExerciseCategory exerciseCategory;
   BodyPart bodyPart;
 
@@ -24,12 +24,15 @@ class Exercise{
   // Convert an Exercise object into a Map object
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    map['id'] = this.hashCode;
+    if (this.id != null) {
+      map['id'] = this.id;
+    }
     map['name'] = this.name;
     map['exerciseCategory'] = EnumToString.parse(this.exerciseCategory);
     map['bodyPart'] = EnumToString.parse(this.bodyPart);
-    if(this.exerciseSets != null){
-      map['exerciseSets'] = this.exerciseSets.map((exSet) => exSet.toMap()).toList();
+    if (this.exerciseSets != null) {
+      map['exerciseSets'] =
+          this.exerciseSets.map((exSet) => exSet.toMap()).toList();
     }
     return map;
   }
@@ -46,7 +49,8 @@ class Exercise{
       });
     }
     if (map['exerciseCategory'] != null) {
-      this.exerciseCategory = EnumToString.fromString(ExerciseCategory.values, map['exerciseCategory']);
+      this.exerciseCategory = EnumToString.fromString(
+          ExerciseCategory.values, map['exerciseCategory']);
     }
     if (map['bodyPart'] != null) {
       this.bodyPart = EnumToString.fromString(BodyPart.values, map['bodyPart']);

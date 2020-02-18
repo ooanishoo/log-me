@@ -52,7 +52,7 @@ class _AddExerciseState extends State<AddExercise> {
           onSelection: ((value) => ex.exerciseCategory = value),
         ),
         RaisedButton(
-          color: Colors.green,
+          color: Theme.of(context).accentColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           child: Text('Save'),

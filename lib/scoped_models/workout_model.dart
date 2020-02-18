@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:scoped_log_me/helper/database.dart';
 import 'package:scoped_log_me/models/enums/exerciseSetType.dart';
 import 'package:scoped_log_me/models/workout.dart';
@@ -22,6 +23,7 @@ class WorkoutModel extends Model {
     // set new workout object as currentWorkout
     String name = Random().nextInt(100).toString();
     currentWorkout = new Workout(
+      id: Random().nextInt(1000000),
       name: 'Workout $name',
       date: new DateTime.now(),
       isActive: true,
