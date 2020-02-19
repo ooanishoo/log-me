@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
       model: widget.model,
       child: Scaffold(
           appBar: AppBar(
-            title: Text('Log me'),
+            title: Text('Home'),
             centerTitle: false,
           ),
           body: Column(
