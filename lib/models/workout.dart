@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 
@@ -11,10 +12,7 @@ class Workout {
   List get getExercise => exercises;
   set setExercise(List<Exercise> value) => this.exercises = value;
 
-  //const uuid = const Uuid();
-
   Workout({
-    //this.id = uuid.v4(),
     this.id,
     this.name,
     this.exercises,
@@ -24,8 +22,9 @@ class Workout {
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    this.id = this.hashCode;
-    map['id'] = this.id;
+    if(this.id != null){
+      map['id'] = this.id;
+    }
     map['name'] = this.name;
     map['isActive'] = this.isActive;
     // Since DateTime is not a supported type in sembast

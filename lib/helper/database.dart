@@ -75,7 +75,6 @@ class DbHelper {
       finder: finder,
     );
   }
-
   Future deleteWorkout(Workout workout) async {
     final finder = Finder(filter: Filter.byKey(workout.id));
     await _workoutStore.delete(
