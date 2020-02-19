@@ -9,6 +9,7 @@ import 'package:scoped_log_me/models/enums/exerciseSetType.dart';
 
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:undraw/undraw.dart';
 
 class ListWorkoutExerciseSetNew extends StatefulWidget {
   const ListWorkoutExerciseSetNew({
@@ -26,6 +27,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
       new Map<Exercise, List<TextEditingController>>();
 
   List<TextEditingController> list = new List<TextEditingController>();
+  UnDrawIllustration illustration;
 
   @override
   void initState() {
@@ -33,6 +35,10 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
 
     WorkoutModel model = ScopedModel.of(context);
     if (model.currentWorkout.exercises == null) setupController();
+
+    // load the unDraw illustration only once
+    if(this.illustration == null)
+      setState(() => this.illustration = UnDrawIllustration.personal_trainer);
   }
 
   void setupController() {
@@ -62,12 +68,11 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
               ),
             )
           : Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No exercise addedss.'),
-                  Text('Click on Add Exercises!'),
-                ],
+              child: UnDraw(
+                color: Theme.of(context).accentColor,
+                illustration: this.illustration,
+                fit: BoxFit.scaleDown,
+                padding: EdgeInsets.all(56.0),
               ),
             );
     });
@@ -209,9 +214,9 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                     FocusNode _focus2 = new FocusNode();
                     return Container(
                         decoration: BoxDecoration(
-                          color: set.isCheck ?
-                          Theme.of(context).primaryColorLight:
-                          Theme.of(context).scaffoldBackgroundColor,
+                          color: set.isCheck
+                              ? Theme.of(context).primaryColorLight
+                              : Theme.of(context).scaffoldBackgroundColor,
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: Row(
@@ -287,7 +292,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                           icon: Icon(Icons.delete),
                                           onPressed: () {
                                             HapticFeedback.selectionClick();
-                                            model.removeSet(exercise,set);
+                                            model.removeSet(exercise, set);
                                           }),
                                       IconButton(
                                           icon: Icon(Icons.chat),
@@ -298,14 +303,17 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                         decoration: BoxDecoration(
                                           color: set.isCheck
                                               ? Theme.of(context).accentColor
-                                              : Theme.of(context).iconTheme.color,
+                                              : Theme.of(context)
+                                                  .iconTheme
+                                                  .color,
                                           borderRadius: new BorderRadius.all(
                                               new Radius.circular(8.0)),
                                         ),
                                         child: IconButton(
                                           icon: Icon(
                                             Icons.done,
-                                            color: Theme.of(context).buttonColor,
+                                            color:
+                                                Theme.of(context).buttonColor,
                                           ),
                                           onPressed: () {
                                             HapticFeedback.heavyImpact();
@@ -332,13 +340,11 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
             ListTile(
               trailing: FlatButton(
                 shape: RoundedRectangleBorder(
-
-                  borderRadius: BorderRadius.circular(8.0),
-                  side: BorderSide(
-                    style:BorderStyle.solid,
-                    color: Theme.of(context).iconTheme.color,
-                  )
-                ),
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: BorderSide(
+                      style: BorderStyle.solid,
+                      color: Theme.of(context).iconTheme.color,
+                    )),
                 child: Text(
                   'Add set',
                   style: TextStyle(color: Theme.of(context).buttonColor),
