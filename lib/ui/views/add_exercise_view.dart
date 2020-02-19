@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_log_me/models/enums/exercise_category.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
-import 'package:scoped_log_me/ui/components/select_item.dart';
 import 'package:scoped_log_me/ui/views/select_bodyPart_view.dart';
 import 'package:scoped_log_me/ui/views/select_category_view.dart';
 import 'package:scoped_model/scoped_model.dart';
