@@ -52,7 +52,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                       disabledColor: Colors.green,
                       disabledTextColor: Colors.white,
                       textColor: Colors.white,
-                      onPressed: () async{
+                      onPressed: () async {
                         HapticFeedback.heavyImpact();
                         await model.finishWorkout();
                         widget.onFinish();
@@ -77,6 +77,9 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                       ScopedModelDescendant<WorkoutModel>(builder: (x, y, m) {
                     return RaisedButton(
                       child: Text('Cancel workout'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0)),
+                      color: Theme.of(context).iconTheme.color,
                       onPressed: (() {
                         // cancel the current workout
                         m.cancelWorkout();
@@ -91,6 +94,8 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                   child: ScopedModelDescendant<AppModel>(builder: (x, y, m) {
                     return RaisedButton(
                       child: Text('Add Exercises'),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0)),
                       onPressed: () {
                         HapticFeedback.heavyImpact();
 

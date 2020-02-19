@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/ui/pages/add_exercise_page.dart';
@@ -50,7 +52,10 @@ class _ListExercisePageState extends State<ListExercisePage> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => AddExercisePage(
-                            model: widget.model, exercise: new Exercise())));
+                            model: widget.model,
+                            exercise: new Exercise(
+                              id: Random().nextInt(1000000),
+                            ))));
                   },
                 )),
           ],
