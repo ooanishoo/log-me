@@ -49,7 +49,8 @@ class _ListWorkoutState extends State<ListWorkout> {
         title: new Text(workout.name),
         //subtitle: new Text(workout.date.toString()),
         subtitle: new Text(
-          new DateFormat.yMMMd().format(workout.date).toString()
+          new DateFormat.yMMMd().format(workout.date).toString(),
+          style: TextStyle(color: Theme.of(context).iconTheme.color),
         ),
         trailing: ButtonBar(
           alignment: MainAxisAlignment.end,
