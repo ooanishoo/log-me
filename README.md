@@ -47,6 +47,7 @@ flutter run
 * [Sembast](https://pub.dev/packages/sembast) (Database)
 * [Service Locator](https://pub.dev/packages/service_locator) (Provides service locator pattern implementation for dart.)
 * [Get It](https://pub.dev/packages/get_it) (Service Locator that allows to decouple the interface from a concrete implementation)
+* [TableCalendar](https://pub.dev/packages/table_calendar) (Highly customizable, feature-packed Flutter Calendar with gestures, animations and multiple formats.)
 
 ### Found this project useful ❤️
 * Support by clicking the ⭐️: button on the upper right of this page.  ✌️
