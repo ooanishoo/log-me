@@ -184,17 +184,18 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                           ),
                           Container(
                             alignment: Alignment.center,
-                            width: 90,
+                            width: 60,
                             child: Text('Weight'),
                           ),
                           Container(
-                            alignment: Alignment.center,
-                            width: 90,
+                            alignment: Alignment.centerRight,
+                            width: 60,
                             child: Text('Reps'),
                           ),
                           Expanded(
                             child: Container(
                               alignment: Alignment.centerRight,
+                              //width: 90,  
                               child: Text('Actions'),
                             ),
                           ),
@@ -218,7 +219,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                               ? Theme.of(context).primaryColorLight
                               : Theme.of(context).scaffoldBackgroundColor,
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        padding: EdgeInsets.only(right: 16.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
@@ -232,7 +233,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                 Container(
                                   padding: EdgeInsets.symmetric(vertical: 5),
                                   margin: EdgeInsets.only(left: 5, right: 5),
-                                  width: 80,
+                                  width: 60,
                                   child: TextField(
                                     //focusNode: _focus1,
                                     controller: textEditingController1,
@@ -259,7 +260,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(left: 5, right: 5),
-                                  width: 80,
+                                  width: 60,
                                   child: TextField(
                                     controller: textEditingController2,
                                     onChanged: (value) {
@@ -283,8 +284,9 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                 ),
                                 Container(
                                   alignment: Alignment.centerRight,
-                                  width: MediaQuery.of(context).size.width -
-                                      (40 + 80 + 80 + 16 + 16 + 20),
+                                  //color: Colors.red,
+                                   width: MediaQuery.of(context).size.width -
+                                       (40 + 60 + 60 + 16 + 20),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[

@@ -41,6 +41,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                   //title: Text(model.currentWorkout.name),
                   title: TextField(
                     controller: _workoutNameController,
+                    textCapitalization: TextCapitalization.sentences,
                     onChanged: ((value) => model.currentWorkout.name = value),
                     //model.currentWorkout.name
                   ),
