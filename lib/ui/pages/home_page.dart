@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scoped_log_me/models/workout.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
+import 'package:scoped_log_me/ui/pages/edit_workout_page.dart';
 import 'package:scoped_log_me/ui/pages/start_workout_page.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -19,6 +21,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool unfinishedWorkout = false;
   CalendarController _calendarController;
+  List<DateTime> dates;
+  Map<DateTime, List<Workout>> events = new Map<DateTime, List<Workout>>();
+  List<dynamic>_selectedEvents =[];
 
   @override
   void initState() {
@@ -29,15 +34,14 @@ class _HomePageState extends State<HomePage> {
     if (widget.workoutModel.currentWorkout != null)
       unfinishedWorkout = widget.workoutModel.currentWorkout.isActive;
     print(this.unfinishedWorkout);
-    // widget.workoutModel.currentWorkout != null
-    //     ? unfinishedWorkout = widget.workoutModel.currentWorkout.isActive
-    //     : false;
 
     _calendarController = CalendarController();
+    _selectedEvents=[];
   }
 
   @override
   Widget build(BuildContext context) {
+    //dates = widget.workoutModel.getWorkoutDates();
     return ScopedModel<AppModel>(
       model: widget.model,
       child: Scaffold(
@@ -48,15 +52,30 @@ class _HomePageState extends State<HomePage> {
           body: ListView(
             children: [
               TableCalendar(
+                headerVisible: false,
+                events: widget.workoutModel.getEvents(),
                 calendarController: _calendarController,
                 startingDayOfWeek: StartingDayOfWeek.monday,
                 initialCalendarFormat: CalendarFormat.week,
                 calendarStyle: CalendarStyle(
                   markersColor: Theme.of(context).accentColor,
-                  selectedColor: Theme.of(context).accentColor,
+                  selectedColor: Theme.of(context).accentColor.withOpacity(0.25),
                   holidayStyle: TextStyle(color: Colors.white),
                   weekendStyle: TextStyle(color: Theme.of(context).buttonColor),
                 ),
+                headerStyle: HeaderStyle(
+                  centerHeaderTitle: false,
+                  decoration: BoxDecoration(
+
+                  ),
+                  //formatButtonShowsNext: false,
+                  formatButtonVisible: true,
+                ),
+                onDaySelected: (date, events) {
+                  setState(() {
+                    this._selectedEvents = events;
+                  });
+                },
               ),
               Card(
                 color: Theme.of(context).scaffoldBackgroundColor,
@@ -107,6 +126,23 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
+              Card(
+                borderOnForeground: false,
+                color: Theme.of(context).accentColor,
+                child: FlatButton(
+                  color: Theme.of(context).accentColor,
+                  child: Text('Get dates'),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  onPressed: () {
+                    HapticFeedback.heavyImpact();
+                    this.events = widget.workoutModel.getEvents();
+                  },
+                ),
+              ),
+              ... _selectedEvents.map((event) => ListTile(
+                title: Text(event.name),
+              ))
             ],
           )),
     );
