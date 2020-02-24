@@ -13,7 +13,9 @@ class WorkoutModel extends Model {
   List<Workout> workouts = [];
   DbHelper dbHelper = DbHelper();
 
-  WorkoutModel();
+  WorkoutModel(){
+    this.getAllWorkouts();
+  }
 
   Future<Workout> getCurrentWorkout() async {
     return this.currentWorkout = await dbHelper.getCurrentWorkout();
@@ -76,6 +78,7 @@ class WorkoutModel extends Model {
 
   void removeWorkout(Workout value) {
     workouts.remove(value);
+    dbHelper.deleteWorkout(value);
     notifyListeners();
   }
 
@@ -119,9 +122,7 @@ class WorkoutModel extends Model {
     notifyListeners();
   }
 
-  void completeSet() {
-
-  }
+  void completeSet() {}
 
   void removeSet(Exercise exercise, ExerciseSet set) {
     if (exercise.exerciseSets.contains(set)) {
@@ -163,5 +164,22 @@ class WorkoutModel extends Model {
       exercise.notes.remove(note);
       notifyListeners();
     }
+  }
+
+  List<DateTime> getWorkoutDates() {
+    List<DateTime> markedDates = this.workouts.map((Workout workout) {
+      return workout.date;
+    }).toList();
+    return markedDates;
+  }
+  
+  Map<DateTime, List<Workout>> getEvents() {
+    Map<DateTime, List<Workout>> events = new Map<DateTime, List<Workout>>();
+
+    this.workouts.map((workout) {
+      List<Workout> workouts= [workout];
+      events.putIfAbsent(workout.date, () => workouts);
+    }).toList();
+    return events;
   }
 }
