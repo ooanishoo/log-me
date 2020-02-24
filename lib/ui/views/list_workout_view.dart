@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_log_me/models/workout.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 
@@ -46,7 +47,10 @@ class _ListWorkoutState extends State<ListWorkout> {
   Widget workoutTile(WorkoutModel model, Workout workout) {
     return ListTile(
         title: new Text(workout.name),
-        subtitle: new Text(workout.date.toString()),
+        //subtitle: new Text(workout.date.toString()),
+        subtitle: new Text(
+          new DateFormat.yMMMd().format(workout.date).toString()
+        ),
         trailing: ButtonBar(
           alignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
