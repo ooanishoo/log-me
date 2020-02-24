@@ -119,7 +119,7 @@ class DbHelper {
 
   Future<List<Workout>> getAllWorkouts() async {
     final finder = Finder(
-        filter: Filter.equals('isActive', false),
+        //filter: Filter.equals('isActive', false),
         sortOrders: [SortOrder('date')]);
 
     final snapshot = await _workoutStore.find(await db, finder: finder);
