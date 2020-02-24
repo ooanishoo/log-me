@@ -79,6 +79,7 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
                 startingDayOfWeek: StartingDayOfWeek.monday,
                 initialCalendarFormat: CalendarFormat.month,
                 calendarStyle: CalendarStyle(
+                  todayColor: Colors.red[600],
                   markersColor: Theme.of(context).accentColor,
                   selectedColor:
                       Theme.of(context).accentColor.withOpacity(0.25),
