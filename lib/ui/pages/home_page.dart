@@ -54,10 +54,15 @@ class _HomePageState extends State<HomePage> {
               TableCalendar(
                 headerVisible: false,
                 events: widget.workoutModel.getEvents(),
+                endDay: DateTime.now(),
                 calendarController: _calendarController,
                 startingDayOfWeek: StartingDayOfWeek.monday,
                 initialCalendarFormat: CalendarFormat.week,
+                onUnavailableDaySelected: null,
                 calendarStyle: CalendarStyle(
+                  todayStyle: TextStyle(color: Theme.of(context).accentColor),
+                  unavailableStyle: TextStyle(color:Theme.of(context).iconTheme.color),
+                  todayColor: Theme.of(context).scaffoldBackgroundColor,
                   markersColor: Theme.of(context).accentColor,
                   selectedColor: Theme.of(context).accentColor.withOpacity(0.25),
                   holidayStyle: TextStyle(color: Colors.white),

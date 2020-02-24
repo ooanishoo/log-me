@@ -37,7 +37,8 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
       print('listening');
       setState(() => filter = _controller.text);
     });
-    _calendarController = CalendarController();
+    _calendarController = CalendarController(
+    );
     _selectedEvents = [];
   }
 
@@ -75,14 +76,17 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
             children: <Widget>[
               TableCalendar(
                 events: widget.workoutModel.getEvents(),
+                endDay: DateTime.now(),
                 calendarController: _calendarController,
                 startingDayOfWeek: StartingDayOfWeek.monday,
                 initialCalendarFormat: CalendarFormat.month,
+                onUnavailableDaySelected: null,
                 calendarStyle: CalendarStyle(
-                  todayColor: Colors.red[600],
+                  todayStyle: TextStyle(color: Theme.of(context).accentColor),
+                  unavailableStyle: TextStyle(color:Theme.of(context).iconTheme.color),
+                  todayColor: Theme.of(context).scaffoldBackgroundColor,
                   markersColor: Theme.of(context).accentColor,
-                  selectedColor:
-                      Theme.of(context).accentColor.withOpacity(0.25),
+                  selectedColor: Theme.of(context).accentColor.withOpacity(0.25),
                   holidayStyle: TextStyle(color: Colors.white),
                   weekendStyle: TextStyle(color: Theme.of(context).buttonColor),
                 ),
