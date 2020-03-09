@@ -8,7 +8,6 @@ Log Me is a workout tracker application built using flutter. The app allows a us
     - Save current workout as a routine for your next workout.
     
 ## Getting Started
-This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
 
 ## Installation
 
