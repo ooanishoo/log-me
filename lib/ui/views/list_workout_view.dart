@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:scoped_log_me/models/workout.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
@@ -59,6 +60,7 @@ class _ListWorkoutState extends State<ListWorkout> {
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () {
+                HapticFeedback.heavyImpact();
                 WorkoutModel newWorkoutModel = WorkoutModel();
                 newWorkoutModel.currentWorkout = workout;
                 Navigator.of(context).push(MaterialPageRoute(
