@@ -3,6 +3,7 @@ import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_log_me/service_locator.dart';
 import 'package:scoped_log_me/ui/pages/home_page.dart';
+import 'package:scoped_log_me/ui/pages/introduction_page.dart';
 import 'package:scoped_log_me/ui/pages/list_exercise_page.dart';
 import 'package:scoped_log_me/ui/pages/list_workout_page.dart';
 import 'package:scoped_log_me/ui/pages/menu_page.dart';
@@ -15,6 +16,7 @@ class NavigationController extends StatefulWidget {
 }
 
 class _NavigationControllerState extends State<NavigationController> {
+  bool isLoading = true;
   final List<Widget> pages = [
     HomePage(
       key: PageStorageKey('Page1'),
@@ -85,12 +87,17 @@ class _NavigationControllerState extends State<NavigationController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
-      body: PageStorage(
-        child: pages[_selectedIndex],
-        bucket: bucket,
-      ),
-    );
+    return isLoading
+        ? IntroductionPage(
+            onSkip: (() => setState(() => this.isLoading = false)),
+            onDone: (() => setState(() => this.isLoading = false)),
+          )
+        : Scaffold(
+            bottomNavigationBar: _bottomNavigationBar(_selectedIndex),
+            body: PageStorage(
+              child: pages[_selectedIndex],
+              bucket: bucket,
+            ),
+          );
   }
 }
