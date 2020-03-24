@@ -17,8 +17,13 @@ class WorkoutModel extends Model {
     this.getAllWorkouts();
   }
 
-  Future<Workout> getCurrentWorkout() async {
-    return this.currentWorkout = await dbHelper.getCurrentWorkout();
+  // Find current active workout from the workout list
+  void getCurrentWorkout(){
+    Workout workout = workouts.firstWhere((workout) => workout.isActive == true, orElse: () => null);
+    if(workout != null){
+      this.currentWorkout = workout;
+      notifyListeners();
+    }
   }
 
   void startWorkout() {
@@ -54,28 +59,22 @@ class WorkoutModel extends Model {
   }
 
   Future<void> finishWorkout() async {
-    // set current workout to false
+    // Set active status of current workout to false
     currentWorkout.isActive = false;
-    
-    //workouts.add(currentWorkout);
-    //dbHelper.insertWorkout(currentWorkout);
 
-    // update the database
+    // Update the database
     dbHelper.updateWorkout(currentWorkout);
     notifyListeners();
 
   }
 
   Future<void> saveWorkout() async {
-    //workouts.add(currentWorkout);
-    //dbHelper.insertWorkout(currentWorkout);
-
+    print('Saving workout to database !');
     dbHelper.updateWorkout(currentWorkout);
-    //currentWorkout = null;
   }
 
   void cancelWorkout() {
-    print('cancelling workout');
+    print('Cancelling workout !');
     workouts.remove(currentWorkout);
     dbHelper.deleteWorkout(currentWorkout);
     currentWorkout = null;
@@ -96,7 +95,6 @@ class WorkoutModel extends Model {
   void addExercises(List<Exercise> exercises) {
     exercises.map((ex) {
       return selectedExercises.add(new Exercise()..name = ex.name);
-      // return selectedExercises.add(ex.newNode());
     }).toList();
 
     initializeFirstSet(selectedExercises);
@@ -133,7 +131,9 @@ class WorkoutModel extends Model {
     notifyListeners();
   }
 
-  void completeSet() {}
+  void completeSet() {
+    saveWorkout();
+  }
 
   void removeSet(Exercise exercise, ExerciseSet set) {
     if (exercise.exerciseSets.contains(set)) {
