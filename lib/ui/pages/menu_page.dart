@@ -8,7 +8,6 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-
   @override
   void initState() {
     super.initState();
@@ -22,11 +21,9 @@ class _MenuPageState extends State<MenuPage> {
         centerTitle: false,
       ),
       body: ListView.builder(
-        itemCount: 8,
+        itemCount: 20,
         itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Text('Menu $index'),
-        );
+        return ListTile(title: Text('Menu $index'),);
        },
       ),
     );

@@ -67,7 +67,7 @@ class _ListWorkoutState extends State<ListWorkout> {
                     builder: (context) => EditWorkoutPage(
                           workoutModel: newWorkoutModel,
                           model: new AppModel(),
-                        )));
+                        ), fullscreenDialog: true));
               },
             ),
             IconButton(
@@ -80,3 +80,13 @@ class _ListWorkoutState extends State<ListWorkout> {
         ));
   }
 }
+
+
+// void _openAddEntryDialog() {
+//   Navigator.of(context).push(new MaterialPageRoute<Null>(
+//       builder: (BuildContext context) {
+//         return new AddEntryDialog();
+//       },
+//     fullscreenDialog: true
+//   ));
+// }

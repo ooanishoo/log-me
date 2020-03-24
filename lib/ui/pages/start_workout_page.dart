@@ -22,6 +22,27 @@ class StartWorkoutPage extends StatefulWidget {
 
 class _StartWorkoutPageState extends State<StartWorkoutPage> {
   TextEditingController _workoutNameController = new TextEditingController();
+  FocusNode myFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    myFocusNode.addListener(() {
+      print("Has focus: ${myFocusNode.hasFocus}");
+      if(!myFocusNode.hasFocus){
+        print('saving workout to db now');
+        widget.workoutModel.saveWorkout();
+      }
+    });
+  }
+
+   @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    myFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +62,13 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                   //title: Text(model.currentWorkout.name),
                   title: TextField(
                     controller: _workoutNameController,
+                    focusNode: myFocusNode,
                     textCapitalization: TextCapitalization.sentences,
-                    onChanged: ((value) => model.currentWorkout.name = value),
-                    //model.currentWorkout.name
+                    onChanged: ((value){
+                      print(value);
+                      model.currentWorkout.name = value;
+                    }),
+                    //onEditingComplete: (() {print('its completed);}),
                   ),
                   trailing: RaisedButton(
                       shape: RoundedRectangleBorder(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_log_me/ui/views/list_workout_exercise_set_view_new.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -28,6 +29,31 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Workout'),
+        actions: <Widget>[
+          ScopedModel<WorkoutModel>(
+            model: widget.workoutModel,
+            child: ScopedModelDescendant<WorkoutModel>(builder: (x, y, model) {
+              return Container(
+                padding: EdgeInsets.all(8),
+                margin: EdgeInsets.only(right: 8),
+                child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    child: Text('Save'),
+                    color: Colors.green,
+                    disabledColor: Colors.green,
+                    disabledTextColor: Colors.white,
+                    textColor: Colors.white,
+                    onPressed: () async {
+                      HapticFeedback.heavyImpact();
+                      await model.saveWorkout();
+                     // widget.onSave();
+                      Navigator.of(context).pop();
+                    }),
+              );
+            }),
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -38,25 +64,35 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
                 _workoutNameController.text = model.currentWorkout.name;
 
                 return ListTile(
-                  title: TextField(
-                    controller: _workoutNameController,
-                    onChanged: ((value) => model.currentWorkout.name = value),
-                    //model.currentWorkout.name
-                  ),
-                  trailing: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text('Save'),
-                      color: Colors.green,
-                      disabledColor: Colors.green,
-                      disabledTextColor: Colors.white,
-                      textColor: Colors.white,
-                      onPressed: () async{
-                        HapticFeedback.heavyImpact();
-                        await model.saveWorkout();
-                        Navigator.of(context).pop();
-                      }),
-                );
+                    title: TextField(
+                      decoration:
+                          new InputDecoration.collapsed(hintText: ''),
+                      controller: _workoutNameController,
+                      onChanged: ((value) => model.currentWorkout.name = value),
+                      //model.currentWorkout.name
+                    ),
+                    subtitle: new Text(
+                      new DateFormat.MMMd()
+                          .format(model.currentWorkout.date)
+                          .toString(),
+                      style:
+                          TextStyle(color: Theme.of(context).iconTheme.color),
+                    )
+
+                    // trailing: RaisedButton(
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(8.0)),
+                    //     child: Text('Save'),
+                    //     color: Colors.green,
+                    //     disabledColor: Colors.green,
+                    //     disabledTextColor: Colors.white,
+                    //     textColor: Colors.white,
+                    //     onPressed: () async{
+                    //       HapticFeedback.heavyImpact();
+                    //       await model.saveWorkout();
+                    //       Navigator.of(context).pop();
+                    //     }),
+                    );
               })),
           // List of exercises in the current workout
           ScopedModel<WorkoutModel>(

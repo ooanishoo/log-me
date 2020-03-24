@@ -75,7 +75,7 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
           Column(
             children: <Widget>[
               TableCalendar(
-                events: widget.workoutModel.getEvents(),
+                events: widget.workoutModel.getWorkoutsByDate(),
                 endDay: DateTime.now(),
                 calendarController: _calendarController,
                 startingDayOfWeek: StartingDayOfWeek.monday,
@@ -106,6 +106,7 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
                     rightChevronIcon: Icon(Icons.chevron_right,
                         color: Theme.of(context).buttonColor)),
                 onDaySelected: (date, events) {
+                  print(date);
                   setState(() {
                     this._selectedEvents = events;
                   });
@@ -136,7 +137,8 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
                             builder: (context) => EditWorkoutPage(
                                   workoutModel: newWorkoutModel,
                                   model: new AppModel(),
-                                )));
+                                  //onSave: newWorkoutModel.currentWorkout = null,
+                                ), fullscreenDialog: true));
                       },
                     ),
                   )),

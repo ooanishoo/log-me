@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
@@ -37,7 +38,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     if (model.currentWorkout.exercises == null) setupController();
 
     // load the unDraw illustration only once
-    if(this.illustration == null)
+    if (this.illustration == null)
       setState(() => this.illustration = UnDrawIllustration.personal_trainer);
   }
 
@@ -195,7 +196,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                           Expanded(
                             child: Container(
                               alignment: Alignment.centerRight,
-                              //width: 90,  
+                              //width: 90,
                               child: Text('Actions'),
                             ),
                           ),
@@ -285,8 +286,8 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                 Container(
                                   alignment: Alignment.centerRight,
                                   //color: Colors.red,
-                                   width: MediaQuery.of(context).size.width -
-                                       (40 + 60 + 60 + 16 + 20),
+                                  width: MediaQuery.of(context).size.width -
+                                      (40 + 60 + 60 + 16 + 20),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
