@@ -322,6 +322,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                             HapticFeedback.heavyImpact();
                                             this.setState(() {
                                               set.isCheck = !set.isCheck;
+                                              model.completeSet();
                                             });
                                           },
                                         ),
