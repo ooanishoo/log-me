@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_log_me/helper/database.dart';
 import 'package:scoped_log_me/models/enums/exerciseSetType.dart';
 import 'package:scoped_log_me/models/workout.dart';
@@ -22,7 +22,7 @@ class WorkoutModel extends Model {
   }
 
   void startWorkout() {
-    // set new workout object as currentWorkout
+    // Initalize new currentWorkout object
     String name = Random().nextInt(100).toString();
     currentWorkout = new Workout(
       id: Random().nextInt(1000000),
@@ -32,6 +32,10 @@ class WorkoutModel extends Model {
       exercises: [],
     );
 
+    // Add the workout to list
+    workouts.add(currentWorkout);
+    
+    // Insert workout in database
     dbHelper.insertWorkout(currentWorkout);
     print('Workout name is ::' + name);
     notifyListeners();
@@ -50,11 +54,16 @@ class WorkoutModel extends Model {
   }
 
   Future<void> finishWorkout() async {
+    // set current workout to false
     currentWorkout.isActive = false;
-    workouts.add(currentWorkout);
+    
+    //workouts.add(currentWorkout);
     //dbHelper.insertWorkout(currentWorkout);
 
+    // update the database
     dbHelper.updateWorkout(currentWorkout);
+    notifyListeners();
+
   }
 
   Future<void> saveWorkout() async {
@@ -67,8 +76,10 @@ class WorkoutModel extends Model {
 
   void cancelWorkout() {
     print('cancelling workout');
+    workouts.remove(currentWorkout);
     dbHelper.deleteWorkout(currentWorkout);
     currentWorkout = null;
+    notifyListeners();
   }
 
   void addWorkout(Workout value) {
@@ -173,12 +184,24 @@ class WorkoutModel extends Model {
     return markedDates;
   }
   
-  Map<DateTime, List<Workout>> getEvents() {
+  Map<DateTime, List<Workout>> getWorkoutsByDate() {
     Map<DateTime, List<Workout>> events = new Map<DateTime, List<Workout>>();
 
+    //Loop throught the workouts
     this.workouts.map((workout) {
+      // iniitalize a workout list and add workout to it
       List<Workout> workouts= [workout];
-      events.putIfAbsent(workout.date, () => workouts);
+
+      // Extract only date from DateTime
+      DateTime workoutDate = DateTime.parse(new DateFormat("yyyy-MM-dd").format(workout.date));
+
+      // If a date already exists in the map as key, just add the current workout to the list(key of the map)
+      if(events[workoutDate] != null){
+        events[workoutDate].add(workout);
+      }
+
+      // if the date doesn't exists, add the date as the key of the map and add the workoutList as well
+      events.putIfAbsent(workoutDate, () => workouts);
     }).toList();
     return events;
   }
