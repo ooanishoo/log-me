@@ -120,7 +120,7 @@ class DbHelper {
   Future<List<Workout>> getAllWorkouts() async {
     final finder = Finder(
         //filter: Filter.equals('isActive', false),
-        sortOrders: [SortOrder('date')]);
+        sortOrders: [SortOrder('date', false)]);
 
     final snapshot = await _workoutStore.find(await db, finder: finder);
 
@@ -132,18 +132,19 @@ class DbHelper {
     }).toList();
   }
 
-  Future<Workout> getCurrentWorkout() async {
-    final finder = Finder(filter: Filter.equals('isActive', true));
+  // Future<Workout> getCurrentWorkout() async {
+  //   final finder = Finder(filter: Filter.equals('isActive', true));
 
-    final snapshot = await _workoutStore.findFirst(await db, finder: finder);
-    if (snapshot != null) {
-      final workout = Workout.fromMap(snapshot.value);
-      workout.id = snapshot.key;
-      print('Current workout NAME ::' + workout.name.toString());
-      return workout;
-    } else {
-      print('No Current workout');
-      return null;
-    }
-  }
+  //   final snapshot = await _workoutStore.find(await db, finder: finder);
+
+  //   if (snapshot != null) {
+  //     final workout = Workout.fromMap(snapshot.value);
+  //     workout.id = snapshot.key;
+  //     print('Current workout NAME ::' + workout.name.toString());
+  //     return workout;
+  //   } else {
+  //     print('No Current workout');
+  //     return null;
+  //   }
+  // }
 }
