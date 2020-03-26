@@ -29,6 +29,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
 
   List<TextEditingController> list = new List<TextEditingController>();
   UnDrawIllustration illustration;
+  bool _autovalidate = false;
 
   @override
   void initState() {
@@ -214,6 +215,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
 
                     FocusNode _focus1 = new FocusNode();
                     FocusNode _focus2 = new FocusNode();
+                    GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
                     return Container(
                         decoration: BoxDecoration(
                           color: set.isCheck
@@ -225,6 +227,8 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Form(
+                              key: _formKey,
+                              autovalidate: _autovalidate,
                               child: Row(children: <Widget>[
                                 Container(
                                   width: 40,
@@ -235,8 +239,19 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                   padding: EdgeInsets.symmetric(vertical: 5),
                                   margin: EdgeInsets.only(left: 5, right: 5),
                                   width: 60,
-                                  child: TextField(
+                                  child: TextFormField(
                                     //focusNode: _focus1,
+                                    validator: (value) {
+                                      print('validator :: $value');
+                                      if (value.isEmpty) {
+                                        print('weight is empty');
+                                        //setState(() => _autovalidate = true);
+                                        return '';
+                                      }
+                                      //print(value);
+                                      return null;
+                                    },
+
                                     controller: textEditingController1,
                                     onChanged: (value) {
                                       model.updateWeight(
@@ -248,13 +263,15 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                         TextInputType.numberWithOptions(
                                             decimal: true),
                                     decoration: InputDecoration(
+                                      errorStyle: TextStyle(height: 0),
                                       isDense: true,
-
                                       //contentPadding:EdgeInsets.all(2),
                                       border: OutlineInputBorder(),
                                       focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Colors.white, width: 2.0),
+                                        borderSide: new BorderSide(
+                                            color:
+                                                Theme.of(context).buttonColor,
+                                            width: 2.0),
                                       ),
                                     ),
                                   ),
@@ -262,7 +279,16 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                 Container(
                                   margin: EdgeInsets.only(left: 5, right: 5),
                                   width: 60,
-                                  child: TextField(
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      print('validator :: $value');
+                                      if (value.isEmpty) {
+                                        print('reps is empty');
+                                        //  setState(() => _autovalidate = true);
+                                        return '';
+                                      }
+                                      return null;
+                                    },
                                     controller: textEditingController2,
                                     onChanged: (value) {
                                       model.updateRep(
@@ -274,11 +300,21 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                         TextInputType.numberWithOptions(
                                             decimal: true),
                                     decoration: InputDecoration(
+                                      errorStyle: TextStyle(height: 0),
+                                      //filled: textEditingController2.text.isEmpty ? true: false,
+                                      //fillColor: Colors.red[900],
+                                      // focusedErrorBorder:
+                                      //     new OutlineInputBorder(
+                                      //   borderSide: new BorderSide(
+                                      //       color: Theme.of(context).accentColor),
+                                      // ),
                                       isDense: true,
                                       border: OutlineInputBorder(),
                                       focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Colors.white, width: 2.0),
+                                        borderSide: new BorderSide(
+                                            color:
+                                                Theme.of(context).buttonColor,
+                                            width: 2.0),
                                       ),
                                     ),
                                   ),
@@ -320,10 +356,24 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                           ),
                                           onPressed: () {
                                             HapticFeedback.heavyImpact();
-                                            this.setState(() {
-                                              set.isCheck = !set.isCheck;
-                                              model.completeSet();
-                                            });
+                                            if (_formKey.currentState
+                                                .validate()) {
+                                              this.setState(() {
+                                                set.isCheck = !set.isCheck;
+                                                model.completeSet();
+                                              });
+                                            } else {
+                                              Scaffold.of(context).showSnackBar(
+                                                  SnackBar(
+                                                      backgroundColor: Theme.of(
+                                                              context)
+                                                          .primaryColorLight,
+                                                      content: Text(
+                                                          'You forgot to mention how much weight you lifted 💪',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white))));
+                                            }
                                           },
                                         ),
                                       ),
