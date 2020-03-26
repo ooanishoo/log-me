@@ -26,7 +26,6 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     myFocusNode.addListener(() {
       print("Has focus: ${myFocusNode.hasFocus}");
@@ -65,7 +64,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                     focusNode: myFocusNode,
                     textCapitalization: TextCapitalization.sentences,
                     onChanged: ((value){
-                      print(value);
+                      print('on change value :: $value');
                       model.currentWorkout.name = value;
                     }),
                     //onEditingComplete: (() {print('its completed);}),

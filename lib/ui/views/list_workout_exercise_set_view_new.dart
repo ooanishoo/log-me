@@ -30,6 +30,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
   List<TextEditingController> list = new List<TextEditingController>();
   UnDrawIllustration illustration;
   bool _autovalidate = false;
+  //String message = '';
 
   @override
   void initState() {
@@ -245,9 +246,12 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                       print('validator :: $value');
                                       if (value.isEmpty) {
                                         print('weight is empty');
-                                        //setState(() => _autovalidate = true);
+                                        // setState(() => message =
+                                        //     'How much did you lift ?🏋️‍♂️');
                                         return '';
                                       }
+                                      setState(() => message = '');
+
                                       //print(value);
                                       return null;
                                     },
@@ -284,9 +288,10 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                       print('validator :: $value');
                                       if (value.isEmpty) {
                                         print('reps is empty');
-                                        //  setState(() => _autovalidate = true);
+                                        //setState(() => message ='How much did you lift ?🏋️‍♂️');
                                         return '';
                                       }
+                                      setState(() => message = '');
                                       return null;
                                     },
                                     controller: textEditingController2,
@@ -369,7 +374,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                                                               context)
                                                           .primaryColorLight,
                                                       content: Text(
-                                                          'You forgot to mention how much weight you lifted 💪',
+                                                          'Don\'t forget to log your set 💪',
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .white))));

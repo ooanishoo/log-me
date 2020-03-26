@@ -147,12 +147,14 @@ class WorkoutModel extends Model {
   void updateWeight(ExerciseSet set, double value) {
     print('value is $value');
     set.weight = value;
+    saveWorkout();
     //notifyListeners();
   }
 
   void updateRep(ExerciseSet set, int value) {
     print('value is $value');
     set.reps = value;
+    saveWorkout();
     //notifyListeners();
   }
 
