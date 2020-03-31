@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:intl/intl.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
@@ -29,8 +28,6 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
 
   List<TextEditingController> list = new List<TextEditingController>();
   UnDrawIllustration illustration;
-  bool _autovalidate = false;
-  //String message = '';
 
   @override
   void initState() {
@@ -92,331 +89,335 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    child: ListTile(
-                      title:
-                          Text((index + 1).toString() + ". " + exercise.name),
-                      trailing: _actionMenu(model, exercise),
+      child: Column(children: <Widget>[
+        Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              /* Title of the exercise */
+              Container(
+                child: ListTile(
+                  title: Text((index + 1).toString() + ". " + exercise.name),
+                  trailing: _actionMenu(model, exercise),
+                ),
+              ),
+              /* Notes of an exercise */
+              Column(
+                  children: notes.map((note) {
+                var _controller =
+                    new TextEditingController(text: note == null ? '' : note);
+                return Slidable(
+                  actionPane: SlidableDrawerActionPane(),
+                  actionExtentRatio: 0.25,
+                  child: ListTile(
+                    title: TextField(
+                      controller: _controller,
+                      onChanged: (value) {
+                        print('Controller $_controller.text.value');
+                        print('Value $value');
+                        print('Notes' + exercise.notes.toString());
+                        return note = value;
+                      },
+                      decoration: InputDecoration(hintText: 'Add a note'),
                     ),
                   ),
-                  Column(
-                      children: notes.map((note) {
-                    var _controller = new TextEditingController(
-                        text: note == null ? '' : note);
-                    return Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
-                      child: ListTile(
-                        title: TextField(
-                          controller: _controller,
-                          onChanged: (value) {
-                            note = value;
-                          },
-                          decoration: InputDecoration(hintText: 'Add a note'),
+                  secondaryActions: <Widget>[
+                    SlideAction(
+                        child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: Colors.red, shape: BoxShape.circle),
+                            child: Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            )),
+                        color: Colors.grey[900],
+                        onTap: () {
+                          HapticFeedback.heavyImpact();
+                          model.removeNoteFromExercise(
+                              exercise, note.toString());
+                        }),
+                  ],
+                );
+              }
+                      // Dismissible(
+                      //   onDismissed: (direction) {
+                      //     HapticFeedback.heavyImpact();
+                      //     model.removeNoteFromExercise(
+                      //         exercise, note.toString());
+                      //   },
+                      //   direction: DismissDirection.endToStart,
+                      //   key: UniqueKey(),
+                      //   background: Container(
+                      //     alignment: AlignmentDirectional.centerEnd,
+                      //     color: Colors.red,
+                      //     child: Padding(
+                      //       padding:
+                      //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                      //       child: Row(
+                      //         mainAxisAlignment: MainAxisAlignment.end,
+                      //         children: <Widget>[
+                      //           Icon(
+                      //             Icons.delete,
+                      //             color: Colors.white,
+                      //           ),
+                      //           Text('Delete'),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      //  child:
+                      //   ListTile(
+                      // title: TextField(
+                      //   decoration:
+                      //       InputDecoration(hintText: 'Add a note'),
+                      // ),
+                      //),
+                      //),
+                      ).toList()),
+              /* Set Heading */
+              Container(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        width: 40,
+                        child: Text('Set'),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        width: 60,
+                        child: Text('Weight'),
+                      ),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        width: 60,
+                        child: Text('Reps'),
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          //width: 90,
+                          child: Text('Actions'),
                         ),
                       ),
-                      secondaryActions: <Widget>[
-                        SlideAction(
-                            child: Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    color: Colors.red, shape: BoxShape.circle),
-                                child: Icon(Icons.delete)),
-                            color: Colors.grey[900],
-                            onTap: () {
-                              HapticFeedback.heavyImpact();
-                              model.removeNoteFromExercise(
-                                  exercise, note.toString());
-                            }),
-                      ],
-                    );
-                  }
-                          // Dismissible(
-                          //   onDismissed: (direction) {
-                          //     HapticFeedback.heavyImpact();
-                          //     model.removeNoteFromExercise(
-                          //         exercise, note.toString());
-                          //   },
-                          //   direction: DismissDirection.endToStart,
-                          //   key: UniqueKey(),
-                          //   background: Container(
-                          //     alignment: AlignmentDirectional.centerEnd,
-                          //     color: Colors.red,
-                          //     child: Padding(
-                          //       padding:
-                          //           EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                          //       child: Row(
-                          //         mainAxisAlignment: MainAxisAlignment.end,
-                          //         children: <Widget>[
-                          //           Icon(
-                          //             Icons.delete,
-                          //             color: Colors.white,
-                          //           ),
-                          //           Text('Delete'),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   ),
-                          //  child:
-                          //   ListTile(
-                          // title: TextField(
-                          //   decoration:
-                          //       InputDecoration(hintText: 'Add a note'),
-                          // ),
-                          //),
-                          //),
-                          ).toList()),
-                  Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            width: 40,
-                            child: Text('Set'),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            width: 60,
-                            child: Text('Weight'),
-                          ),
-                          Container(
-                            alignment: Alignment.centerRight,
-                            width: 60,
-                            child: Text('Reps'),
-                          ),
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              //width: 90,
-                              child: Text('Actions'),
-                            ),
-                          ),
-                        ],
-                      )),
-                  Divider(),
-                  Column(
-                      children: sets.map((set) {
-                    var textEditingController1 = new TextEditingController(
-                      text: set.weight == null ? '' : set.weight.toString(),
-                    );
-                    var textEditingController2 = new TextEditingController(
-                      text: set.reps == null ? '' : set.reps.toString(),
-                    );
-
-                    FocusNode _focus1 = new FocusNode();
-                    FocusNode _focus2 = new FocusNode();
-                    GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-                    return Container(
-                        decoration: BoxDecoration(
-                          color: set.isCheck
-                              ? Theme.of(context).primaryColorLight
-                              : Theme.of(context).scaffoldBackgroundColor,
+                    ],
+                  )),
+              Divider(),
+              /* Set Body */
+              Column(
+                  children: sets.map((set) {
+                return Container(
+                    decoration: BoxDecoration(
+                      color: set.isCheck
+                          ? Theme.of(context).primaryColorLight
+                          : Theme.of(context).scaffoldBackgroundColor,
+                    ),
+                    padding: EdgeInsets.only(right: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        new WorkoutSet(
+                          model: model,
+                          set: set,
+                          exercise: exercise,
+                          onChecked: ((value) => setState(() => set = value))
                         ),
-                        padding: EdgeInsets.only(right: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Form(
-                              key: _formKey,
-                              autovalidate: _autovalidate,
-                              child: Row(children: <Widget>[
-                                Container(
-                                  width: 40,
-                                  alignment: Alignment.centerLeft,
-                                  child: _exerciseSetMenu(model, set),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 5),
-                                  margin: EdgeInsets.only(left: 5, right: 5),
-                                  width: 60,
-                                  child: TextFormField(
-                                    //focusNode: _focus1,
-                                    validator: (value) {
-                                      print('validator :: $value');
-                                      if (value.isEmpty) {
-                                        print('weight is empty');
-                                        // setState(() => message =
-                                        //     'How much did you lift ?🏋️‍♂️');
-                                        return '';
-                                      }
-                                      setState(() => message = '');
+                      ],
+                    ));
+              }).toList()),
+            ],
+          ),
+        ),
+        //),
+        ListTile(
+          trailing: FlatButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                side: BorderSide(
+                  style: BorderStyle.solid,
+                  color: Theme.of(context).iconTheme.color,
+                )),
+            child: Text(
+              'Add set',
+              style: TextStyle(color: Theme.of(context).buttonColor),
+            ),
 
-                                      //print(value);
-                                      return null;
-                                    },
+            //color: Colors.grey,
+            onPressed: () {
+              model.addSet(model.currentWorkout.exercises[index]);
+              HapticFeedback.heavyImpact();
+            },
+          ),
+        )
+      ]),
+    );
+  }
+}
 
-                                    controller: textEditingController1,
-                                    onChanged: (value) {
-                                      model.updateWeight(
-                                          set,
-                                          double.parse(
-                                              textEditingController1.text));
-                                    },
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(
-                                            decimal: true),
-                                    decoration: InputDecoration(
-                                      errorStyle: TextStyle(height: 0),
-                                      isDense: true,
-                                      //contentPadding:EdgeInsets.all(2),
-                                      border: OutlineInputBorder(),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color:
-                                                Theme.of(context).buttonColor,
-                                            width: 2.0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 5, right: 5),
-                                  width: 60,
-                                  child: TextFormField(
-                                    validator: (value) {
-                                      print('validator :: $value');
-                                      if (value.isEmpty) {
-                                        print('reps is empty');
-                                        //setState(() => message ='How much did you lift ?🏋️‍♂️');
-                                        return '';
-                                      }
-                                      setState(() => message = '');
-                                      return null;
-                                    },
-                                    controller: textEditingController2,
-                                    onChanged: (value) {
-                                      model.updateRep(
-                                          set,
-                                          int.parse(
-                                              textEditingController2.text));
-                                    },
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(
-                                            decimal: true),
-                                    decoration: InputDecoration(
-                                      errorStyle: TextStyle(height: 0),
-                                      //filled: textEditingController2.text.isEmpty ? true: false,
-                                      //fillColor: Colors.red[900],
-                                      // focusedErrorBorder:
-                                      //     new OutlineInputBorder(
-                                      //   borderSide: new BorderSide(
-                                      //       color: Theme.of(context).accentColor),
-                                      // ),
-                                      isDense: true,
-                                      border: OutlineInputBorder(),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color:
-                                                Theme.of(context).buttonColor,
-                                            width: 2.0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  //color: Colors.red,
-                                  width: MediaQuery.of(context).size.width -
-                                      (40 + 60 + 60 + 16 + 20),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: <Widget>[
-                                      IconButton(
-                                          icon: Icon(Icons.delete),
-                                          onPressed: () {
-                                            HapticFeedback.selectionClick();
-                                            model.removeSet(exercise, set);
-                                          }),
-                                      IconButton(
-                                          icon: Icon(Icons.chat),
-                                          onPressed: () {
-                                            HapticFeedback.selectionClick();
-                                          }),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: set.isCheck
-                                              ? Theme.of(context).accentColor
-                                              : Theme.of(context)
-                                                  .iconTheme
-                                                  .color,
-                                          borderRadius: new BorderRadius.all(
-                                              new Radius.circular(8.0)),
-                                        ),
-                                        child: IconButton(
-                                          icon: Icon(
-                                            Icons.done,
-                                            color:
-                                                Theme.of(context).buttonColor,
-                                          ),
-                                          onPressed: () {
-                                            HapticFeedback.heavyImpact();
-                                            if (_formKey.currentState
-                                                .validate()) {
-                                              this.setState(() {
-                                                set.isCheck = !set.isCheck;
-                                                model.completeSet();
-                                              });
-                                            } else {
-                                              Scaffold.of(context).showSnackBar(
-                                                  SnackBar(
-                                                      backgroundColor: Theme.of(
-                                                              context)
-                                                          .primaryColorLight,
-                                                      content: Text(
-                                                          'Don\'t forget to log your set 💪',
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white))));
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ]),
-                            ),
-                          ],
-                        ));
-                  }
-                          // ),
-                          ).toList()),
-                ],
+class WorkoutSet extends StatefulWidget {
+  WorkoutSet({Key key, this.model, this.set, this.exercise, this.onChecked}) : super(key: key);
+
+  final WorkoutModel model;
+  final ExerciseSet set;
+  final Exercise exercise;
+  final Function onChecked;
+  //final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
+
+  @override
+  _WorkoutSetState createState() => _WorkoutSetState(model, set, exercise);
+}
+
+class _WorkoutSetState extends State<WorkoutSet> {
+  _WorkoutSetState(WorkoutModel model, ExerciseSet set, Exercise exercise);
+
+  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    var textEditingController1 = new TextEditingController(
+      text: widget.set.weight == null ? '' : widget.set.weight.toString(),
+    );
+    var textEditingController2 = new TextEditingController(
+      text: widget.set.reps == null ? '' : widget.set.reps.toString(),
+    );
+
+    return new Form(
+      key: _formKey2,
+      //autovalidate: _autovalidate,
+      child: Row(children: <Widget>[
+        Container(
+          width: 40,
+          alignment: Alignment.centerLeft,
+          child: _exerciseSetMenu(widget.model, widget.set),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 5),
+          margin: EdgeInsets.only(left: 5, right: 5),
+          width: 60,
+          child: TextFormField(
+            //focusNode: _focus1,
+            validator: (value) {
+              print('validator :: $value');
+              if (value.isEmpty) {
+                print('weight is empty');
+                // setState(() => message =
+                //     'How much did you lift ?🏋️‍♂️');
+                return '';
+              }
+              //print(value);
+              return null;
+            },
+
+            controller: textEditingController1,
+            onChanged: (value) {
+              widget.model.updateWeight(
+                  widget.set, double.parse(textEditingController1.text));
+            },
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              errorStyle: TextStyle(height: 0),
+              isDense: true,
+              //contentPadding:EdgeInsets.all(2),
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: new BorderSide(
+                    color: Theme.of(context).buttonColor, width: 2.0),
               ),
             ),
-            //),
-            ListTile(
-              trailing: FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    side: BorderSide(
-                      style: BorderStyle.solid,
-                      color: Theme.of(context).iconTheme.color,
-                    )),
-                child: Text(
-                  'Add set',
-                  style: TextStyle(color: Theme.of(context).buttonColor),
-                ),
-
-                //color: Colors.grey,
-                onPressed: () {
-                  model.addSet(model.currentWorkout.exercises[index]);
-                  HapticFeedback.heavyImpact();
-                },
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 5, right: 5),
+          width: 60,
+          child: TextFormField(
+            validator: (value) {
+              print('validator :: $value');
+              if (value.isEmpty) {
+                print('reps is empty');
+                //setState(() => message ='How much did you lift ?🏋️‍♂️');
+                return '';
+              }
+              return null;
+            },
+            controller: textEditingController2,
+            onChanged: (value) {
+              widget.model.updateRep(
+                  widget.set, int.parse(textEditingController2.text));
+            },
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              errorStyle: TextStyle(height: 0),
+              //filled: textEditingController2.text.isEmpty ? true: false,
+              //fillColor: Colors.red[900],
+              // focusedErrorBorder:
+              //     new OutlineInputBorder(
+              //   borderSide: new BorderSide(
+              //       color: Theme.of(context).accentColor),
+              // ),
+              isDense: true,
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                borderSide: new BorderSide(
+                    color: Theme.of(context).buttonColor, width: 2.0),
               ),
-            )
-          ]),
+            ),
+          ),
+        ),
+        Container(
+          alignment: Alignment.centerRight,
+          //color: Colors.red,
+          width: MediaQuery.of(context).size.width - (40 + 60 + 60 + 16 + 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    HapticFeedback.selectionClick();
+                    widget.model.removeSet(widget.exercise, widget.set);
+                  }),
+              IconButton(
+                  icon: Icon(Icons.chat),
+                  onPressed: () {
+                    HapticFeedback.selectionClick();
+                  }),
+              Container(
+                decoration: BoxDecoration(
+                  color: widget.set.isCheck
+                      ? Theme.of(context).accentColor
+                      : Theme.of(context).iconTheme.color,
+                  borderRadius: new BorderRadius.all(new Radius.circular(8.0)),
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.done,
+                    color: Theme.of(context).buttonColor,
+                  ),
+                  onPressed: () {
+                    HapticFeedback.heavyImpact();
+                    if (_formKey2.currentState.validate()) {
+                      this.setState(() {
+                        widget.set.isCheck = !widget.set.isCheck;
+                        widget.onChecked(widget.set);
+                        widget.model.completeSet();
+                      });
+                    } else {
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Theme.of(context).primaryColorLight,
+                          content: Text('Don\'t forget to log your set 💪',
+                              style: TextStyle(color: Colors.white))));
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ]),
     );
   }
 }
