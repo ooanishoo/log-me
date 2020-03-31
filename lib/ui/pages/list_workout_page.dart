@@ -37,8 +37,7 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
       print('listening');
       setState(() => filter = _controller.text);
     });
-    _calendarController = CalendarController(
-    );
+    _calendarController = CalendarController();
     _selectedEvents = [];
   }
 
@@ -83,10 +82,12 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
                 onUnavailableDaySelected: null,
                 calendarStyle: CalendarStyle(
                   todayStyle: TextStyle(color: Theme.of(context).accentColor),
-                  unavailableStyle: TextStyle(color:Theme.of(context).iconTheme.color),
+                  unavailableStyle:
+                      TextStyle(color: Theme.of(context).iconTheme.color),
                   todayColor: Theme.of(context).scaffoldBackgroundColor,
                   markersColor: Theme.of(context).accentColor,
-                  selectedColor: Theme.of(context).accentColor.withOpacity(0.25),
+                  selectedColor:
+                      Theme.of(context).accentColor.withOpacity(0.25),
                   holidayStyle: TextStyle(color: Colors.white),
                   weekendStyle: TextStyle(color: Theme.of(context).buttonColor),
                 ),
@@ -116,7 +117,8 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
                     title: Text(workout.name),
                     subtitle: new Text(
                       new DateFormat.MMMd().format(workout.date).toString(),
-                      style: TextStyle(color: Theme.of(context).iconTheme.color),
+                      style:
+                          TextStyle(color: Theme.of(context).iconTheme.color),
                     ),
                     trailing: FlatButton(
                       shape: RoundedRectangleBorder(
@@ -138,7 +140,9 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
                                   workoutModel: newWorkoutModel,
                                   model: new AppModel(),
                                   //onSave: newWorkoutModel.currentWorkout = null,
-                                ), fullscreenDialog: true));
+                                ),
+                            fullscreenDialog: true,
+                        ));
                       },
                     ),
                   )),
