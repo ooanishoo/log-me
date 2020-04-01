@@ -34,7 +34,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     super.initState();
 
     WorkoutModel model = ScopedModel.of(context);
-    if (model.currentWorkout.exercises == null) setupController();
+    if (model.currentWorkout!= null && model.currentWorkout.exercises == null) {setupController();}
 
     // load the unDraw illustration only once
     if (this.illustration == null)
@@ -51,7 +51,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     PopupMenu.context = context;
 
     return ScopedModelDescendant<WorkoutModel>(builder: (x, y, mdl) {
-      return (mdl.currentWorkout.exercises != null &&
+      return (mdl.currentWorkout!= null && mdl.currentWorkout.exercises != null &&
               mdl.currentWorkout.exercises.length > 0)
           ? Expanded(
               child: ListView.builder(
