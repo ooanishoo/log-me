@@ -49,6 +49,9 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
   @override
   Widget build(BuildContext context) {
     PopupMenu.context = context;
+    WorkoutModel model = ScopedModel.of(context);
+
+    if(model.currentWorkout == null) return Center(child:CircularProgressIndicator());
 
     return ScopedModelDescendant<WorkoutModel>(builder: (x, y, mdl) {
       return (mdl.currentWorkout!= null && mdl.currentWorkout.exercises != null &&
@@ -98,7 +101,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
               /* Title of the exercise */
               Container(
                 child: ListTile(
-                  title: Text((index + 1).toString() + ". " + exercise.name),
+                  title: Text((index + 1).toString() + ". " + exercise.name ?? "Test"),
                   trailing: _actionMenu(model, exercise),
                 ),
               ),
