@@ -44,7 +44,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
     super.dispose();
   }
 
-  // user defined function
+  // Pop up dialog when Cancel workout is clicked
   Future<void> _cancelWorkoutDialog(WorkoutModel model) async {
     bool result;
     showDialog(
@@ -99,13 +99,66 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
     });
   }
 
+  // Pop up dialog when Cancel workout is clicked
+  Future<void> _saveWorkoutDialog(WorkoutModel model) async {
+    bool result;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          backgroundColor: Theme.of(context).primaryColorLight,
+          title: new Text("Finish Workout ?"),
+          content: new Text(
+            "All invalid or empty sets wil be removed. All valid sets will be marked as complete.",
+            style: TextStyle(color: Theme.of(context).accentTextTheme.title.color),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+              color: Theme.of(context).iconTheme.color,
+              onPressed: () {
+                // Close the dialog first
+                Navigator.of(context).pop();
+                result = false;
+              },
+            ),
+            FlatButton(
+              child: Text('Finish'),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+              color: Theme.of(context).accentColor,
+              disabledColor: Colors.green,
+              disabledTextColor: Colors.white,
+              textColor: Colors.white,
+              onPressed: () {
+                // Close the dialog first
+                Navigator.of(context).pop();
+                result = true;
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) async{
+      if (result) {
+        await model.finishWorkout();
+        widget.onFinish();
+        // Go back to HomePage
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Start Workout'),
       ),
-      body: isCancelled
+      body: (isCancelled || widget.workoutModel.currentWorkout == null)
           ? Center(child: CircularProgressIndicator())
           : Column(
               children: <Widget>[
@@ -137,9 +190,11 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                             textColor: Colors.white,
                             onPressed: () async {
                               HapticFeedback.heavyImpact();
-                              await model.finishWorkout();
-                              widget.onFinish();
-                              Navigator.of(context).pop();
+                              _saveWorkoutDialog(model);
+
+                              // await model.finishWorkout();
+                              // widget.onFinish();
+                              // Navigator.of(context).pop();
                             }),
                       );
                     })),
@@ -165,6 +220,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                             color: Theme.of(context).iconTheme.color,
                             onPressed: (() {
                               // cancel the current workout
+                              HapticFeedback.heavyImpact();
                               _cancelWorkoutDialog(m);
                             }),
                           );
