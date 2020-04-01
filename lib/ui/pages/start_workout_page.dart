@@ -23,24 +23,80 @@ class StartWorkoutPage extends StatefulWidget {
 class _StartWorkoutPageState extends State<StartWorkoutPage> {
   TextEditingController _workoutNameController = new TextEditingController();
   FocusNode myFocusNode = FocusNode();
+  bool isCancelled = false;
 
   @override
   void initState() {
     super.initState();
     myFocusNode.addListener(() {
       print("Has focus: ${myFocusNode.hasFocus}");
-      if(!myFocusNode.hasFocus){
+      if (!myFocusNode.hasFocus) {
         print('saving workout to db now');
         widget.workoutModel.saveWorkout();
       }
     });
   }
 
-   @override
+  @override
   void dispose() {
     // Clean up the focus node when the Form is disposed.
     myFocusNode.dispose();
     super.dispose();
+  }
+
+  // user defined function
+  Future<void> _cancelWorkoutDialog(WorkoutModel model) async {
+    bool result;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          backgroundColor: Theme.of(context).primaryColorLight,
+          title: new Text("Cancel Workout ?"),
+          content: new Text(
+            "Are you sure you want to cancel this workout? All progress will be lost.",
+            style:
+                TextStyle(color: Theme.of(context).accentTextTheme.title.color),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel workout'),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+              color: Colors.red[900],
+              onPressed: () {
+                // Close the dialog first
+                Navigator.of(context).pop();
+                result = true;
+              },
+            ),
+            FlatButton(
+              child: Text('Resume'),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+              color: Theme.of(context).iconTheme.color,
+              disabledColor: Colors.green,
+              disabledTextColor: Colors.white,
+              textColor: Colors.white,
+              onPressed: () {
+                // Close the dialog first
+                Navigator.of(context).pop();
+                result = false;
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (result) {
+        setState(() => isCancelled = true);
+        model.cancelWorkout();
+        widget.onCancel();
+        // Go back to HomePage
+        Navigator.of(context).pop();
+      }
+    });
   }
 
   @override
@@ -49,94 +105,95 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
       appBar: AppBar(
         title: Text('Start Workout'),
       ),
-      body: Column(
-        children: <Widget>[
-          ScopedModel<WorkoutModel>(
-              model: widget.workoutModel,
-              child:
-                  ScopedModelDescendant<WorkoutModel>(builder: (x, y, model) {
-                _workoutNameController.text = model.currentWorkout.name;
-
-                return ListTile(
-                  //title: Text(model.currentWorkout.name),
-                  title: TextField(
-                    controller: _workoutNameController,
-                    focusNode: myFocusNode,
-                    textCapitalization: TextCapitalization.sentences,
-                    onChanged: ((value){
-                      print('on change value :: $value');
-                      model.currentWorkout.name = value;
-                    }),
-                    //onEditingComplete: (() {print('its completed);}),
-                  ),
-                  trailing: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text('Finish'),
-                      color: Theme.of(context).accentColor,
-                      disabledColor: Colors.green,
-                      disabledTextColor: Colors.white,
-                      textColor: Colors.white,
-                      onPressed: () async {
-                        HapticFeedback.heavyImpact();
-                        await model.finishWorkout();
-                        widget.onFinish();
-                        Navigator.of(context).pop();
-                      }),
-                );
-              })),
-          // List of exercises in the current workout
-          ScopedModel<WorkoutModel>(
-            model: widget.workoutModel,
-            child: ListWorkoutExerciseSetNew(),
-            //child: ListWorkoutExerciseSet(),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: ButtonBar(
-              alignment: MainAxisAlignment.center,
+      body: isCancelled
+          ? Center(child: CircularProgressIndicator())
+          : Column(
               children: <Widget>[
                 ScopedModel<WorkoutModel>(
-                  model: widget.workoutModel,
-                  child:
-                      ScopedModelDescendant<WorkoutModel>(builder: (x, y, m) {
-                    return RaisedButton(
-                      child: Text('Cancel workout'),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      color: Theme.of(context).iconTheme.color,
-                      onPressed: (() {
-                        // cancel the current workout
-                        m.cancelWorkout();
-                        widget.onCancel();
-                        Navigator.of(context).pop();
-                      }),
-                    );
-                  }),
-                ),
-                ScopedModel<AppModel>(
-                  model: AppModel(),
-                  child: ScopedModelDescendant<AppModel>(builder: (x, y, m) {
-                    return RaisedButton(
-                      child: Text('Add Exercises'),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      onPressed: () {
-                        HapticFeedback.heavyImpact();
+                    model: widget.workoutModel,
+                    child: ScopedModelDescendant<WorkoutModel>(
+                        builder: (x, y, model) {
+                      _workoutNameController.text = model.currentWorkout.name;
 
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SelectExercisePage(
-                                model: widget.model,
-                                workoutModel: widget.workoutModel)));
-                      },
-                    );
-                  }),
+                      return ListTile(
+                        //title: Text(model.currentWorkout.name),
+                        title: TextField(
+                          controller: _workoutNameController,
+                          focusNode: myFocusNode,
+                          textCapitalization: TextCapitalization.sentences,
+                          onChanged: ((value) {
+                            print('on change value :: $value');
+                            model.currentWorkout.name = value;
+                          }),
+                          //onEditingComplete: (() {print('its completed);}),
+                        ),
+                        trailing: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                            child: Text('Finish'),
+                            color: Theme.of(context).accentColor,
+                            disabledColor: Colors.green,
+                            disabledTextColor: Colors.white,
+                            textColor: Colors.white,
+                            onPressed: () async {
+                              HapticFeedback.heavyImpact();
+                              await model.finishWorkout();
+                              widget.onFinish();
+                              Navigator.of(context).pop();
+                            }),
+                      );
+                    })),
+                // List of exercises in the current workout
+                ScopedModel<WorkoutModel>(
+                  model: widget.workoutModel,
+                  child: ListWorkoutExerciseSetNew(),
+                  //child: ListWorkoutExerciseSet(),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: ButtonBar(
+                    alignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ScopedModel<WorkoutModel>(
+                        model: widget.workoutModel,
+                        child: ScopedModelDescendant<WorkoutModel>(
+                            builder: (x, y, m) {
+                          return RaisedButton(
+                            child: Text('Cancel workout'),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                            color: Theme.of(context).iconTheme.color,
+                            onPressed: (() {
+                              // cancel the current workout
+                              _cancelWorkoutDialog(m);
+                            }),
+                          );
+                        }),
+                      ),
+                      ScopedModel<AppModel>(
+                        model: AppModel(),
+                        child:
+                            ScopedModelDescendant<AppModel>(builder: (x, y, m) {
+                          return RaisedButton(
+                            child: Text('Add Exercises'),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                            onPressed: () {
+                              HapticFeedback.heavyImpact();
+
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => SelectExercisePage(
+                                      model: widget.model,
+                                      workoutModel: widget.workoutModel)));
+                            },
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }
