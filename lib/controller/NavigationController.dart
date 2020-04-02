@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 import 'package:scoped_log_me/service_locator.dart';
@@ -59,7 +60,10 @@ class _NavigationControllerState extends State<NavigationController> {
       unselectedItemColor: Theme.of(context).disabledColor,
       type: BottomNavigationBarType.fixed, // added to show more than 3 items
       currentIndex: _selectedIndex,
-      onTap: _changePage,
+      onTap:((event){
+        HapticFeedback.mediumImpact();
+        _changePage(event);
+      }),
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
