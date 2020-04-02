@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:undraw/undraw.dart';
 
@@ -19,11 +20,17 @@ class IntroductionPage extends StatelessWidget {
     return Scaffold(
         body: IntroductionScreen(
       onDone: () {
+        HapticFeedback.mediumImpact();
         onDone();
       },
       onSkip: () {
+        HapticFeedback.mediumImpact();
         onSkip();
+      }, 
+      onChange: (index) {
+        HapticFeedback.lightImpact();
       },
+     
       showSkipButton: true,
       skip: Text('Skip'),
       showNextButton: true,
@@ -94,6 +101,7 @@ class IntroductionPage extends StatelessWidget {
           footer: RaisedButton(
             color: Theme.of(context).accentColor,
             onPressed: () {
+              HapticFeedback.mediumImpact();
               onDone();
             },
             child: const Text("Let's Go !"),
