@@ -67,6 +67,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
               color: Colors.red[900],
               onPressed: () {
                 // Close the dialog first
+                HapticFeedback.heavyImpact();
                 Navigator.of(context).pop();
                 result = true;
               },
@@ -80,6 +81,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
               disabledTextColor: Colors.white,
               textColor: Colors.white,
               onPressed: () {
+                HapticFeedback.heavyImpact();
                 // Close the dialog first
                 Navigator.of(context).pop();
                 result = false;
@@ -120,6 +122,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                   borderRadius: BorderRadius.circular(8.0)),
               color: Theme.of(context).iconTheme.color,
               onPressed: () {
+                HapticFeedback.heavyImpact();
                 // Close the dialog first
                 Navigator.of(context).pop();
                 result = false;
@@ -134,6 +137,7 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
               disabledTextColor: Colors.white,
               textColor: Colors.white,
               onPressed: () {
+                HapticFeedback.heavyImpact();
                 // Close the dialog first
                 Navigator.of(context).pop();
                 result = true;
