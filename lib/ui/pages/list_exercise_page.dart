@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/ui/pages/add_exercise_page.dart';
 import 'package:scoped_log_me/ui/views/list_exercise_view.dart';
@@ -84,7 +85,10 @@ class _ListExercisePageState extends State<ListExercisePage> {
           onChanged: (text) {
             print(text);
           },
-          onTap: (() => this.tapped = true),
+           onTap: (() {
+            HapticFeedback.lightImpact();
+            this.tapped = true;
+          }),
           controller: _controller,
           decoration: InputDecoration(
             filled: true,
@@ -124,6 +128,7 @@ class _ListExercisePageState extends State<ListExercisePage> {
             ? FlatButton(
                 child: Text('Cancel'),
                 onPressed: (() {
+                  HapticFeedback.lightImpact();
                   _controller.clear(); // clear the text in searchBar
                   FocusScope.of(context).unfocus(); // hide the keyboard
                 }),

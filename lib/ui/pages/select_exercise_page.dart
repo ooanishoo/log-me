@@ -25,6 +25,7 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
   TextEditingController _controller = new TextEditingController();
   String filter = '';
   List<Exercise> selectedExercises = [];
+  bool tapped = false;
 
   @override
   void initState() {
@@ -85,10 +86,19 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
                     children: <Widget>[
                       RaisedButton(
                         child: Text('Add Superset ($exerciseLength)'),
-                        onPressed: () {},
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0)),
+                        color: Theme.of(context).iconTheme.color,
+                        onPressed: (() {
+                          // cancel the current workout
+                          HapticFeedback.heavyImpact();
+                        }),
                       ),
                       RaisedButton(
                           child: Text('Add Exercise ($exerciseLength)'),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0)),
+                          color: Theme.of(context).buttonColor,
                           onPressed: (() {
                             HapticFeedback.heavyImpact();
 
@@ -110,17 +120,61 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
 
   Widget searchBar() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        onChanged: (text) {
-          print(text);
-        },
-        controller: _controller,
-        decoration: InputDecoration(
-            hintText: "Search",
-            prefixIcon: Icon(Icons.search),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+      padding: const EdgeInsets.all(0.0),
+      child: ListTile(
+        title: TextField(
+          onChanged: (text) {
+            print(text);
+          },
+          onTap: (() {
+            HapticFeedback.lightImpact();
+            this.tapped = true;
+          }),
+          controller: _controller,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Theme.of(context).primaryColorLight,
+            hintText: "Search Exercise",
+            hintStyle: TextStyle(
+              color: Theme.of(context).accentTextTheme.title.color,
+            ),
+            suffixIcon: this._controller.text.length == 0
+                ? Container(
+                    width: 0,
+                  )
+                : IconButton(
+                    icon: Icon(Icons.cancel),
+                    color: Theme.of(context).accentIconTheme.color,
+                    onPressed: (() => setState(() => _controller.clear())),
+                  ),
+            prefixIcon: IconButton(
+              icon: Icon(Icons.search),
+              onPressed: null,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              borderSide: BorderSide(
+                color: Theme.of(context).primaryColorLight,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              borderSide: BorderSide(
+                color: Theme.of(context).primaryColorLight,
+              ),
+            ),
+          ),
+        ),
+        trailing: this.tapped == true
+            ? FlatButton(
+                child: Text('Cancel'),
+                onPressed: (() {
+                  HapticFeedback.lightImpact();
+                  _controller.clear(); // clear the text in searchBar
+                  FocusScope.of(context).unfocus(); // hide the keyboard
+                }),
+              )
+            : Container(width: 0),
       ),
     );
   }
