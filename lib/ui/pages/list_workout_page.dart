@@ -132,7 +132,7 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
                         style: TextStyle(color: Theme.of(context).buttonColor),
                       ),
                       onPressed: () {
-                        HapticFeedback.heavyImpact();
+                        HapticFeedback.mediumImpact();
                         WorkoutModel newWorkoutModel = WorkoutModel();
                         newWorkoutModel.currentWorkout = workout;
                         Navigator.of(context).push(MaterialPageRoute(
