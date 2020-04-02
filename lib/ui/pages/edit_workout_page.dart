@@ -105,26 +105,13 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
             child: ButtonBar(
               alignment: MainAxisAlignment.center,
               children: <Widget>[
-                ScopedModel<WorkoutModel>(
-                  model: widget.workoutModel,
-                  child:
-                      ScopedModelDescendant<WorkoutModel>(builder: (x, y, m) {
-                    return RaisedButton(
-                      child: Text('Cancel workout'),
-                      onPressed: (() {
-                        // cancel the current workout
-                        m.cancelWorkout();
-                        widget.onCancel();
-                        Navigator.of(context).pop();
-                      }),
-                    );
-                  }),
-                ),
                 ScopedModel<AppModel>(
                   model: AppModel(),
                   child: ScopedModelDescendant<AppModel>(builder: (x, y, m) {
                     return RaisedButton(
                       child: Text('Add Exercises'),
+                      shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
                       onPressed: () {
                         HapticFeedback.heavyImpact();
 
