@@ -94,15 +94,16 @@ class DbHelper {
     );
   }
 
-  Future updateWorkout(Workout workout) async {
+  Future<int> updateWorkout(Workout workout) async {
     // For filtering by key (ID), RegEx, greater than, and many other criteria,
     // we use a Finder.
     final finder = Finder(filter: Filter.byKey(workout.id));
-    await _workoutStore.update(
+    int result = await _workoutStore.update(
       await _db,
       workout.toMap(),
       finder: finder,
     );
+    return result;
   }
 
   Future<List<Exercise>> getAllExercises() async {
