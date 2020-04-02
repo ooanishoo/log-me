@@ -19,6 +19,7 @@ class WorkoutModel extends Model {
 
   // Find current active workout from the workout list
   void getCurrentWorkout(){
+    currentWorkout = null;
     Workout workout = workouts.firstWhere((workout) => workout.isActive == true, orElse: () => null);
     if(workout != null){
       this.currentWorkout = workout;
@@ -61,11 +62,11 @@ class WorkoutModel extends Model {
   Future<void> finishWorkout() async {
     // Set active status of current workout to false
     currentWorkout.isActive = false;
-
     // Update the database
-    dbHelper.updateWorkout(currentWorkout);
+    await dbHelper.updateWorkout(currentWorkout).then((value){
+      print(value);
+    });
     notifyListeners();
-
   }
 
   Future<void> saveWorkout() async {
