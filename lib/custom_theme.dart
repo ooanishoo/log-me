@@ -29,6 +29,8 @@ ThemeData CustomTheme(BuildContext context) {
         color: Color(0xFF8E8E92),
       ),
       disabledColor: Color(0xFF909090),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       textTheme: Theme.of(context).textTheme.apply(
             bodyColor: Colors.white,
             displayColor: Colors.white,
