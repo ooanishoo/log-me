@@ -24,10 +24,13 @@ class ListExercise extends StatefulWidget {
 }
 
 class _ListExerciseState extends State<ListExercise> {
+
+  
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<AppModel>(
       builder: (x, y, model) {
+         int length = model.exercises.length;
         return Expanded(
             // GestureDetector is added for hiding keyboard when swiping down
             child: GestureDetector(
@@ -40,21 +43,26 @@ class _ListExerciseState extends State<ListExercise> {
               padding: const EdgeInsets.only(left: 8.0, right: 8.0),
               child: Divider(height: 0),
             ),
-            itemCount: model.exercises.length,
+            itemCount: length,
             itemBuilder: (context, index) {
               // store the object to a local variable
               Exercise exercise = model.exercises[index];
               // Display all when search filter is empty
               return widget.filter == null || widget.filter == ''
                   ? exerciseTile(model, exercise)
-                  : exercise.name.contains(widget.filter)
+                  : (
+                      exercise.name.toLowerCase().contains(widget.filter.toLowerCase()) || 
+                      describeEnum(exercise.bodyPart).toString().toLowerCase().contains(widget.filter.toLowerCase())
+                    )
                       ? exerciseTile(model, exercise)
-                      // : new Column(
+                      //  : new Column(
                       //     children: <Widget>[
                       //       Text(widget.filter + ' not found'),
                       //     ],
                       //   );
-                      : new Container();
+                      : new Container(
+                        child:Text('test')
+                      );
             },
           ),
         ));
