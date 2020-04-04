@@ -66,6 +66,7 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
               ),
             ],
             onTap: ((int index) => setState(() {
+                  HapticFeedback.lightImpact();
                   this.page = index;
                 })),
           ),
@@ -107,6 +108,7 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
                     rightChevronIcon: Icon(Icons.chevron_right,
                         color: Theme.of(context).buttonColor)),
                 onDaySelected: (date, events) {
+                  HapticFeedback.selectionClick();
                   print(date);
                   setState(() {
                     this._selectedEvents = events;
@@ -136,12 +138,12 @@ class ListWorkoutPageState extends State<ListWorkoutPage> {
                         WorkoutModel newWorkoutModel = WorkoutModel();
                         newWorkoutModel.currentWorkout = workout;
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => EditWorkoutPage(
-                                  workoutModel: newWorkoutModel,
-                                  model: new AppModel(),
-                                  //onSave: newWorkoutModel.currentWorkout = null,
-                                ),
-                            fullscreenDialog: true,
+                          builder: (context) => EditWorkoutPage(
+                            workoutModel: newWorkoutModel,
+                            model: new AppModel(),
+                            //onSave: newWorkoutModel.currentWorkout = null,
+                          ),
+                          fullscreenDialog: true,
                         ));
                       },
                     ),
