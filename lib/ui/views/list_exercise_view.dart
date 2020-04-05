@@ -1,10 +1,8 @@
 import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scoped_log_me/models/exercise.dart';
-
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/ui/pages/add_exercise_page.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -26,84 +24,73 @@ class ListExercise extends StatefulWidget {
 }
 
 class _ListExerciseState extends State<ListExercise> {
-  bool found = true;
   @override
   Widget build(BuildContext context) {
-    return found
-        ? ScopedModelDescendant<AppModel>(
-            builder: (x, y, model) {
-              return Expanded(
-                  // GestureDetector is added for hiding keyboard when swiping down
-                  child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onPanDown: (_) {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                },
-                child: ListView.builder(
-                  itemCount: model.exercises.length,
-                  itemBuilder: (context, index) {
-                    // store the object to a local variable
-                    Exercise exercise = model.exercises[index];
+    return ScopedModelDescendant<AppModel>(
+      builder: (x, y, model) {
+        return Expanded(
+            // GestureDetector is added for hiding keyboard when swiping down
+            child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onPanDown: (_) {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: ListView.builder(
+            itemCount: model.exercises.length,
+            itemBuilder: (context, index) {
+              // store the object to a local variable
+              Exercise exercise = model.exercises[index];
 
-                    return widget.filter == null || widget.filter == ''
-                        ? exerciseTile(model, exercise)
-                        : (exercise.name
-                                    .toLowerCase()
-                                    .contains(widget.filter.toLowerCase()) ||
-                                describeEnum(exercise.bodyPart)
-                                    .toString()
-                                    .toLowerCase()
-                                    .contains(widget.filter.toLowerCase()))
-                            ? exerciseTile(model, exercise)
-                            : ((index == 0)
-                                ? new Container(
-                                    alignment: Alignment.center,
-                                    height: 200,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text('\"' +
-                                            widget.filter +
-                                            '\"' +
-                                            ' not found'),
-                                        RaisedButton(
-                                          child: Text('Create new exercise'),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0)),
-                                          color: Theme.of(context)
-                                              .primaryColorLight,
-                                          onPressed: (() {
-                                            // cancel the current workout
-                                            HapticFeedback.heavyImpact();
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddExercisePage(
-                                                          model: model,
-                                                          exercise: new Exercise(
-                                                              id: Random()
-                                                                  .nextInt(
-                                                                      1000000),
-                                                              name: widget
-                                                                  .filter),
-                                                        )));
-                                          }),
-                                        ),
-                                      ],
-                                    ))
-                                : new Container());
-                  },
-                ),
-              ));
+              return widget.filter == null || widget.filter == ''
+                  ? exerciseTile(model, exercise)
+                  : (exercise.name
+                              .toLowerCase()
+                              .contains(widget.filter.toLowerCase()) ||
+                          describeEnum(exercise.bodyPart)
+                              .toString()
+                              .toLowerCase()
+                              .contains(widget.filter.toLowerCase()))
+                      ? exerciseTile(model, exercise)
+                      : ((index == 0)
+                          ? new Container(
+                              alignment: Alignment.center,
+                              height: 200,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text('\"' +
+                                      widget.filter +
+                                      '\"' +
+                                      ' not found'),
+                                  RaisedButton(
+                                    child: Text('Create new exercise'),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0)),
+                                    color: Theme.of(context).primaryColorLight,
+                                    onPressed: (() {
+                                      // cancel the current workout
+                                      HapticFeedback.heavyImpact();
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddExercisePage(
+                                                    model: model,
+                                                    exercise: new Exercise(
+                                                        id: Random()
+                                                            .nextInt(1000000),
+                                                        name: widget.filter),
+                                                  )));
+                                    }),
+                                  ),
+                                ],
+                              ))
+                          : new Container());
             },
-          )
-        : Expanded(
-            child: Container(
-              child: Text('Not found'),
-            ),
-          );
+          ),
+        ));
+      },
+    );
   }
 
   Widget exerciseTile(AppModel model, Exercise exercise) {
@@ -118,13 +105,20 @@ class _ListExerciseState extends State<ListExercise> {
           child: ListTile(
             title: new Text(exercise.name ?? 'No name'),
             subtitle: new Text(
-                describeEnum(exercise.bodyPart).toString().toUpperCase()),
+              exercise.bodyPart == null
+                  ? 'None'
+                  : describeEnum(exercise.bodyPart)
+                      .toString()
+                      .firstLetterToUpperCase(),
+              style: TextStyle(
+                color: Theme.of(context).accentTextTheme.title.color,
+              ),
+            ),
             onTap: () {
               HapticFeedback.selectionClick();
               if (widget.isSelectable && !widget.hasActions) {
                 setState(() {
                   exercise.isCheck = !exercise.isCheck;
-
                   // Add the exercise only if it is selected
                   if (exercise.isCheck) {
                     print('checked');
@@ -173,5 +167,15 @@ class _ListExerciseState extends State<ListExercise> {
         ),
       ),
     );
+  }
+}
+
+// Extension method for string
+extension StringExtension on String {
+  get firstLetterToUpperCase {
+    if (this != null) {
+      return this[0].toUpperCase() + this.substring(1);
+    } else
+      return null;
   }
 }
