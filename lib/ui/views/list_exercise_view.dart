@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,60 +26,93 @@ class ListExercise extends StatefulWidget {
 }
 
 class _ListExerciseState extends State<ListExercise> {
-
-  
+  bool found = true;
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<AppModel>(
-      builder: (x, y, model) {
-         int length = model.exercises.length;
-        return Expanded(
-            // GestureDetector is added for hiding keyboard when swiping down
-            child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onPanDown: (_) {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: ListView.separated(
-            separatorBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: Divider(height: 0),
-            ),
-            itemCount: length,
-            itemBuilder: (context, index) {
-              // store the object to a local variable
-              Exercise exercise = model.exercises[index];
-              // Display all when search filter is empty
-              return widget.filter == null || widget.filter == ''
-                  ? exerciseTile(model, exercise)
-                  : (
-                      exercise.name.toLowerCase().contains(widget.filter.toLowerCase()) || 
-                      describeEnum(exercise.bodyPart).toString().toLowerCase().contains(widget.filter.toLowerCase())
-                    )
-                      ? exerciseTile(model, exercise)
-                      //  : new Column(
-                      //     children: <Widget>[
-                      //       Text(widget.filter + ' not found'),
-                      //     ],
-                      //   );
-                      : new Container(
-                        child:Text('test')
-                      );
+    return found
+        ? ScopedModelDescendant<AppModel>(
+            builder: (x, y, model) {
+              return Expanded(
+                  // GestureDetector is added for hiding keyboard when swiping down
+                  child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onPanDown: (_) {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+                child: ListView.builder(
+                  itemCount: model.exercises.length,
+                  itemBuilder: (context, index) {
+                    // store the object to a local variable
+                    Exercise exercise = model.exercises[index];
+
+                    return widget.filter == null || widget.filter == ''
+                        ? exerciseTile(model, exercise)
+                        : (exercise.name
+                                    .toLowerCase()
+                                    .contains(widget.filter.toLowerCase()) ||
+                                describeEnum(exercise.bodyPart)
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(widget.filter.toLowerCase()))
+                            ? exerciseTile(model, exercise)
+                            : ((index == 0)
+                                ? new Container(
+                                    alignment: Alignment.center,
+                                    height: 200,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text('\"' +
+                                            widget.filter +
+                                            '\"' +
+                                            ' not found'),
+                                        RaisedButton(
+                                          child: Text('Create new exercise'),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0)),
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                          onPressed: (() {
+                                            // cancel the current workout
+                                            HapticFeedback.heavyImpact();
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddExercisePage(
+                                                          model: model,
+                                                          exercise: new Exercise(
+                                                              id: Random()
+                                                                  .nextInt(
+                                                                      1000000),
+                                                              name: widget
+                                                                  .filter),
+                                                        )));
+                                          }),
+                                        ),
+                                      ],
+                                    ))
+                                : new Container());
+                  },
+                ),
+              ));
             },
-          ),
-        ));
-      },
-    );
+          )
+        : Expanded(
+            child: Container(
+              child: Text('Not found'),
+            ),
+          );
   }
 
   Widget exerciseTile(AppModel model, Exercise exercise) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 1),
       child: Ink(
-        color: exercise.isCheck ?
-        Theme.of(context).primaryColorLight:
-        Theme.of(context).primaryColor,
-
+        color: exercise.isCheck
+            ? Theme.of(context).primaryColorLight
+            : Theme.of(context).primaryColor,
         child: ListTileTheme(
           dense: true,
           child: ListTile(
@@ -132,10 +167,7 @@ class _ListExerciseState extends State<ListExercise> {
                     ],
                   )
                 : exercise.isCheck
-                    ? Icon(
-                        Icons.done,
-                        color: Theme.of(context).accentColor
-                      )
+                    ? Icon(Icons.done, color: Theme.of(context).accentColor)
                     : Container(width: 1),
           ),
         ),
