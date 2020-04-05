@@ -46,7 +46,7 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Select Exercise Page'),
+          title: Text('Select Exercises'),
           actions: <Widget>[
             Padding(
                 padding: EdgeInsets.all(8.0),
