@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0)),
                   onPressed: () {
-                    HapticFeedback.heavyImpact();
+                    HapticFeedback.lightImpact();
 
                     if (!this.unfinishedWorkout) {
                       widget.workoutModel.startWorkout();

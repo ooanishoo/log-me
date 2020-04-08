@@ -51,6 +51,7 @@ class _ListExercisePageState extends State<ListExercisePage> {
                 child: IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
+                    HapticFeedback.lightImpact();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => AddExercisePage(
                             model: widget.model,
@@ -85,7 +86,7 @@ class _ListExercisePageState extends State<ListExercisePage> {
           onChanged: (text) {
             print(text);
           },
-           onTap: (() {
+          onTap: (() {
             HapticFeedback.lightImpact();
             this.tapped = true;
           }),
@@ -104,7 +105,10 @@ class _ListExercisePageState extends State<ListExercisePage> {
                 : IconButton(
                     icon: Icon(Icons.cancel),
                     color: Theme.of(context).accentIconTheme.color,
-                    onPressed: (() => setState(() => _controller.clear())),
+                    onPressed: (() {
+                      HapticFeedback.lightImpact();
+                      setState(() => _controller.clear());
+                    }),
                   ),
             prefixIcon: IconButton(
               icon: Icon(Icons.search),

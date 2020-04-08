@@ -12,12 +12,14 @@ class ListExercise extends StatefulWidget {
       {Key key,
       this.filter,
       this.isSelectable = false,
-      this.hasActions = false})
+      this.hasActions = false,
+      this.isMultiSelect = true})
       : super(key: key);
 
   final String filter;
   final bool isSelectable;
   final bool hasActions;
+  final bool isMultiSelect;
 
   @override
   _ListExerciseState createState() => _ListExerciseState();
@@ -116,7 +118,9 @@ class _ListExerciseState extends State<ListExercise> {
             ),
             onTap: () {
               HapticFeedback.selectionClick();
-              if (widget.isSelectable && !widget.hasActions) {
+              if (widget.isSelectable &&
+                  widget.isMultiSelect &&
+                  !widget.hasActions) {
                 setState(() {
                   exercise.isCheck = !exercise.isCheck;
                   // Add the exercise only if it is selected
@@ -126,6 +130,28 @@ class _ListExerciseState extends State<ListExercise> {
                     if (!model.selectedExercises.contains(exercise)) {
                       print("list doesn't contains Ex");
                       model.selectExercise(exercise);
+                    }
+                  } else {
+                    print('unchecked');
+                    if (model.selectedExercises.contains(exercise)) {
+                      print("list contains Ex, need to remove it");
+                      model.unselectExercise(exercise);
+                    }
+                  }
+                });
+              }
+              if (widget.isSelectable &&
+                  !widget.isMultiSelect &&
+                  !widget.hasActions) {
+                setState(() {
+                  exercise.isCheck = !exercise.isCheck;
+                  // Add the exercise only if it is selected
+                  if (exercise.isCheck) {
+                    print('checked');
+                    // Add only if the list already doesn't have the exercise
+                    if (!model.selectedExercises.contains(exercise)) {
+                      print("list doesn't contains Ex");
+                      model.replaceExercise(exercise);
                     }
                   } else {
                     print('unchecked');

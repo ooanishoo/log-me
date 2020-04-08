@@ -10,18 +10,19 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:scoped_log_me/scoped_models/app_model.dart';
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
 
-class SelectExercisePage extends StatefulWidget {
-  const SelectExercisePage({Key key, this.model, this.workoutModel})
+class ReplaceExercisePage extends StatefulWidget {
+  const ReplaceExercisePage({Key key, this.model, this.workoutModel, this.exerciseToReplace})
       : super(key: key);
 
   final AppModel model;
   final WorkoutModel workoutModel;
+  final Exercise exerciseToReplace;
 
   @override
-  _SelectExercisePageState createState() => _SelectExercisePageState();
+  _ReplaceExercisePageState createState() => _ReplaceExercisePageState();
 }
 
-class _SelectExercisePageState extends State<SelectExercisePage> {
+class _ReplaceExercisePageState extends State<ReplaceExercisePage> {
   TextEditingController _controller = new TextEditingController();
   String filter = '';
   List<Exercise> selectedExercises = [];
@@ -48,7 +49,7 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
         // Added so that cancel workout and add exercises button don't float up when keyboard pops up
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('Select Exercises'),
+          title: Text('Replace Exercise'),
           actions: <Widget>[
             Padding(
                 padding: EdgeInsets.all(8.0),
@@ -73,7 +74,7 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
             // Exercise List
             ScopedModel<AppModel>(
               model: widget.model,
-              child: ListExercise(filter: filter, isSelectable: true),
+              child: ListExercise(filter: filter, isSelectable: true, isMultiSelect:false),
             ),
             // Add Buttons
             ScopedModel<AppModel>(
@@ -87,16 +88,6 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
                     alignment: MainAxisAlignment.center,
                     children: <Widget>[
                       RaisedButton(
-                        child: Text('Add Superset ($exerciseLength)'),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0)),
-                        color: Theme.of(context).iconTheme.color,
-                        onPressed: (() {
-                          // cancel the current workout
-                          HapticFeedback.heavyImpact();
-                        }),
-                      ),
-                      RaisedButton(
                           child: Text('Add Exercise ($exerciseLength)'),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0)),
@@ -106,7 +97,7 @@ class _SelectExercisePageState extends State<SelectExercisePage> {
 
                             // add the selected exercise to workout
                             widget.workoutModel
-                                .addExercises(model.selectedExercises);
+                                .replaceExercise(widget.exerciseToReplace, model.selectedExercises[0]);
                             // remove all the selectedWorkout from exerciseList
                             model.clearSelection();
                             Navigator.of(context).pop();

@@ -6,15 +6,20 @@ import 'package:popup_menu/popup_menu.dart';
 import 'package:scoped_log_me/models/exercise.dart';
 import 'package:scoped_log_me/models/exerciseSet.dart';
 import 'package:scoped_log_me/models/enums/exerciseSetType.dart';
+import 'package:scoped_log_me/scoped_models/app_model.dart';
 
 import 'package:scoped_log_me/scoped_models/workout_model.dart';
+import 'package:scoped_log_me/ui/pages/replace_exercise_page.dart';
+import 'package:scoped_log_me/ui/pages/select_exercise_page.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:undraw/undraw.dart';
 
 class ListWorkoutExerciseSetNew extends StatefulWidget {
   const ListWorkoutExerciseSetNew({
-    Key key,
+    Key key, this.appModel,
   }) : super(key: key);
+
+  final AppModel appModel;
 
   @override
   _ListWorkoutExerciseSetNewState createState() =>
@@ -34,7 +39,10 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     super.initState();
 
     WorkoutModel model = ScopedModel.of(context);
-    if (model.currentWorkout!= null && model.currentWorkout.exercises == null) {setupController();}
+    if (model.currentWorkout != null &&
+        model.currentWorkout.exercises == null) {
+      setupController();
+    }
 
     // load the unDraw illustration only once
     if (this.illustration == null)
@@ -51,10 +59,12 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     PopupMenu.context = context;
     WorkoutModel model = ScopedModel.of(context);
 
-    if(model.currentWorkout == null) return Center(child:CircularProgressIndicator());
+    if (model.currentWorkout == null)
+      return Center(child: CircularProgressIndicator());
 
     return ScopedModelDescendant<WorkoutModel>(builder: (x, y, mdl) {
-      return (mdl.currentWorkout!= null && mdl.currentWorkout.exercises != null &&
+      return (mdl.currentWorkout != null &&
+              mdl.currentWorkout.exercises != null &&
               mdl.currentWorkout.exercises.length > 0)
           ? Expanded(
               child: ListView.builder(
@@ -66,7 +76,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                       onPanDown: (_) {
                         FocusScope.of(context).requestFocus(FocusNode());
                       },
-                      child: _exerciseSet(mdl, index));
+                      child: _exerciseSet(mdl, index, context));
                 },
               ),
             )
@@ -81,7 +91,7 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
     });
   }
 
-  Widget _exerciseSet(WorkoutModel model, int index) {
+  Widget _exerciseSet(WorkoutModel model, int index, BuildContext context) {
     Exercise exercise = model.currentWorkout.exercises[index];
     List<ExerciseSet> sets = exercise.exerciseSets ?? [];
     List<String> notes = exercise.notes ?? [];
@@ -101,8 +111,9 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
               /* Title of the exercise */
               Container(
                 child: ListTile(
-                  title: Text((index + 1).toString() + ". " + exercise.name ?? "Test"),
-                  trailing: _actionMenu(model, exercise),
+                  title: Text(
+                      (index + 1).toString() + ". " + exercise.name ?? "Test"),
+                  trailing: _actionMenu(model, exercise, context),
                 ),
               ),
               /* Notes of an exercise */
@@ -224,18 +235,18 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         new WorkoutSet(
-                          model: model,
-                          set: set,
-                          exercise: exercise,
-                          onChecked: ((value) => setState(() => set = value))
-                        ),
+                            model: model,
+                            set: set,
+                            exercise: exercise,
+                            onChecked: ((value) =>
+                                setState(() => set = value))),
                       ],
                     ));
               }).toList()),
             ],
           ),
         ),
-        //),
+        // Add set button
         ListTile(
           trailing: FlatButton(
             shape: RoundedRectangleBorder(
@@ -259,10 +270,108 @@ class _ListWorkoutExerciseSetNewState extends State<ListWorkoutExerciseSetNew> {
       ]),
     );
   }
+
+  Widget _actionMenu(
+      WorkoutModel model, Exercise exercise, BuildContext context) {
+        HapticFeedback.lightImpact();
+    return PopupMenuButton<String>(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      offset: Offset(0, 20),
+      color: Theme.of(context).primaryColorLight,
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: "replace",
+          child: Text("Replace Exercise"),
+        ),
+        PopupMenuItem(
+          value: "remove",
+          child: Text("Remove Exercise"),
+        ),
+        PopupMenuItem(
+          value: "note",
+          child: Text("Add a note"),
+        ),
+      ],
+      onSelected: (action) {
+        HapticFeedback.selectionClick();
+        switch (action) {
+          case "replace":
+            _replaceExerciseDialog(model, exercise);
+            break;
+          case "remove":
+            model.removeExercise(exercise);
+            break;
+          case "note":
+            model.addNoteToExercise(exercise);
+            break;
+          default:
+        }
+        print("value:$action");
+      },
+    );
+  }
+
+  Future<void> _replaceExerciseDialog(WorkoutModel model, Exercise exercise) async {
+    bool result;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          backgroundColor: Theme.of(context).primaryColorLight,
+          title: new Text("Replace Exercise ?"),
+          content: new Text(
+            "All previously entered sets will be replaced.",
+            style:
+                TextStyle(color: Theme.of(context).accentTextTheme.title.color),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+              color: Theme.of(context).iconTheme.color,
+              onPressed: () {
+                HapticFeedback.heavyImpact();
+                // Close the dialog first
+                Navigator.of(context).pop();
+                result = false;
+              },
+            ),
+            FlatButton(
+              child: Text('Replace'),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)),
+              color: Colors.red[900],
+              disabledColor: Colors.green,
+              disabledTextColor: Colors.white,
+              textColor: Colors.white,
+              onPressed: () {
+                HapticFeedback.heavyImpact();
+                // Close the dialog first
+                Navigator.of(context).pop();
+                result = true;
+              },
+            ),
+          ],
+        );
+      },
+    ).then((value) async {
+      if (result) {
+        Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ReplaceExercisePage(
+                                      exerciseToReplace: exercise,
+                                      model: widget.appModel,
+                                      workoutModel: model)));
+      }
+    });
+  }
 }
 
 class WorkoutSet extends StatefulWidget {
-  WorkoutSet({Key key, this.model, this.set, this.exercise, this.onChecked}) : super(key: key);
+  WorkoutSet({Key key, this.model, this.set, this.exercise, this.onChecked})
+      : super(key: key);
 
   final WorkoutModel model;
   final ExerciseSet set;
@@ -424,39 +533,6 @@ class _WorkoutSetState extends State<WorkoutSet> {
     );
   }
 }
-
-Widget _actionMenu(WorkoutModel model, Exercise exercise) =>
-    PopupMenuButton<String>(
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          value: "replace",
-          child: Text("Replace Exercise"),
-        ),
-        PopupMenuItem(
-          value: "remove",
-          child: Text("Remove Exercise"),
-        ),
-        PopupMenuItem(
-          value: "note",
-          child: Text("Add a note"),
-        ),
-      ],
-      onSelected: (action) {
-        HapticFeedback.selectionClick();
-        switch (action) {
-          case "replace":
-            break;
-          case "remove":
-            model.removeExercise(exercise);
-            break;
-          case "note":
-            model.addNoteToExercise(exercise);
-            break;
-          default:
-        }
-        print("value:$action");
-      },
-    );
 
 Widget _exerciseSetMenu(WorkoutModel model, ExerciseSet set) =>
     PopupMenuButton<String>(

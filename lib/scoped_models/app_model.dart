@@ -34,6 +34,17 @@ class AppModel extends Model {
     notifyListeners();
   }
 
+  void replaceExercise(Exercise value) {
+    exercises.forEach((exercise) {
+      if (exercise.isCheck == true) {
+        exercise.isCheck = false;
+      }
+    });
+    value.isCheck = true;
+    selectedExercises.clear();
+    this.selectExercise(value);
+  }
+
   Future<void> addExercise(Exercise value) async {
     exercises.insert(0, value);
     value.isCheck = false;
@@ -59,7 +70,8 @@ class AppModel extends Model {
     notifyListeners();
   }
 
-  void updateExerciseCategory(Exercise exercise, ExerciseCategory exerciseCategory) {
+  void updateExerciseCategory(
+      Exercise exercise, ExerciseCategory exerciseCategory) {
     exercise.exerciseCategory = exerciseCategory;
   }
 

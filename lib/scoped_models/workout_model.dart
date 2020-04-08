@@ -13,15 +13,16 @@ class WorkoutModel extends Model {
   List<Workout> workouts = [];
   DbHelper dbHelper = DbHelper();
 
-  WorkoutModel(){
+  WorkoutModel() {
     this.getAllWorkouts();
   }
 
   // Find current active workout from the workout list
-  void getCurrentWorkout(){
+  void getCurrentWorkout() {
     currentWorkout = null;
-    Workout workout = workouts.firstWhere((workout) => workout.isActive == true, orElse: () => null);
-    if(workout != null){
+    Workout workout = workouts.firstWhere((workout) => workout.isActive == true,
+        orElse: () => null);
+    if (workout != null) {
       this.currentWorkout = workout;
       notifyListeners();
     }
@@ -40,7 +41,7 @@ class WorkoutModel extends Model {
 
     // Add the workout to list
     workouts.add(currentWorkout);
-    
+
     // Insert workout in database
     dbHelper.insertWorkout(currentWorkout);
     print('Workout name is ::' + name);
@@ -63,7 +64,7 @@ class WorkoutModel extends Model {
     // Set active status of current workout to false
     currentWorkout.isActive = false;
     // Update the database
-    await dbHelper.updateWorkout(currentWorkout).then((value){
+    await dbHelper.updateWorkout(currentWorkout).then((value) {
       print(value);
     });
     notifyListeners();
@@ -92,13 +93,22 @@ class WorkoutModel extends Model {
     dbHelper.deleteWorkout(value);
     notifyListeners();
   }
+  
+  // Returns a new instance of an exercise
+  Exercise createExercise(Exercise exercise) {
+    return new Exercise()
+      ..name = exercise.name
+      ..bodyPart = exercise.bodyPart
+      ..exerciseCategory = exercise.exerciseCategory
+      ..notes = exercise.notes;
+  }
 
   void addExercises(List<Exercise> exercises) {
     exercises.map((ex) {
-      return selectedExercises.add(new Exercise()..name = ex.name);
+      return selectedExercises.add(createExercise(ex));
     }).toList();
 
-    initializeFirstSet(selectedExercises);
+    initializeFirstSets(selectedExercises);
     currentWorkout.exercises.addAll(selectedExercises);
     selectedExercises.clear();
 
@@ -116,9 +126,35 @@ class WorkoutModel extends Model {
     }
   }
 
-  void initializeFirstSet(List<Exercise> exercises) {
+  void replaceExercise(Exercise oldExercise, Exercise newExercise) {
+    if (currentWorkout.exercises.contains(oldExercise)) {
+      // Get the index of old exercise
+      int index = currentWorkout.exercises.indexOf(oldExercise);
+      print('Exercise to be replace at $index');
+
+      // Remove the old exercise
+      currentWorkout.exercises.remove(oldExercise);
+      
+      // Initialize first set of new exercise
+      newExercise = initializeFirstSet(createExercise(newExercise));
+
+      // Insert the new exercise at oldExercise's index
+      currentWorkout.exercises.insert(index, newExercise);
+
+      // Save the workout to db when exercise is replaced
+      saveWorkout();
+      notifyListeners();
+    }
+  }
+
+  void initializeFirstSets(List<Exercise> exercises) {
     exercises.forEach(
         (exercise) => exercise.exerciseSets = [new ExerciseSet(index: 1)]);
+  }
+
+  Exercise initializeFirstSet(Exercise exercise) {
+    exercise.exerciseSets = [new ExerciseSet(index: 1)];
+    return exercise;
   }
 
   void addSet(Exercise exercise) {
@@ -186,20 +222,21 @@ class WorkoutModel extends Model {
     }).toList();
     return markedDates;
   }
-  
+
   Map<DateTime, List<Workout>> getWorkoutsByDate() {
     Map<DateTime, List<Workout>> events = new Map<DateTime, List<Workout>>();
 
     //Loop throught the workouts
     this.workouts.map((workout) {
       // iniitalize a workout list and add workout to it
-      List<Workout> workouts= [workout];
+      List<Workout> workouts = [workout];
 
       // Extract only date from DateTime
-      DateTime workoutDate = DateTime.parse(new DateFormat("yyyy-MM-dd").format(workout.date));
+      DateTime workoutDate =
+          DateTime.parse(new DateFormat("yyyy-MM-dd").format(workout.date));
 
       // If a date already exists in the map as key, just add the current workout to the list(key of the map)
-      if(events[workoutDate] != null){
+      if (events[workoutDate] != null) {
         events[workoutDate].add(workout);
       }
 

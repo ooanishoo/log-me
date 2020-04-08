@@ -1,6 +1,7 @@
 //import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scoped_log_me/models/enums/body_part.dart';
 import 'package:scoped_log_me/models/enums/exercise_category.dart';
 import 'package:scoped_log_me/models/exercise.dart';
@@ -112,7 +113,7 @@ class _AddExerciseState extends State<AddExercise> {
                         textStyle: TextStyle(color: Colors.white)),
                     title: 'Select body Part',
                     style: SmartSelectModalStyle(
-                        backgroundColor: Colors.transparent),
+                        backgroundColor: Theme.of(context).scaffoldBackgroundColor),
                   ),
                   choiceConfig: SmartSelectChoiceConfig(
                     style: SmartSelectChoiceStyle(
@@ -149,7 +150,7 @@ class _AddExerciseState extends State<AddExercise> {
                         textStyle: TextStyle(color: Colors.white)),
                     title: 'Select Exercise Category',
                     style: SmartSelectModalStyle(
-                        backgroundColor: Colors.transparent),
+                        backgroundColor: Theme.of(context).scaffoldBackgroundColor),
                   ),
                   choiceConfig: SmartSelectChoiceConfig(
                     style: SmartSelectChoiceStyle(
@@ -167,6 +168,7 @@ class _AddExerciseState extends State<AddExercise> {
                       borderRadius: BorderRadius.circular(8.0)),
                   child: Text('Save'),
                   onPressed: () async {
+                    HapticFeedback.lightImpact();
                     if (_formKey.currentState.validate()) {
                       ex.name = _controller.text;
                       print('name is :: ${_controller.text}');

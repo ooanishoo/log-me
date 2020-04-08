@@ -159,6 +159,8 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Added so that cancel workout and add exercises button don't float up when keyboard pops up
+      //resizeToAvoidBottomInset: false, 
       appBar: AppBar(
         title: Text('Start Workout'),
       ),
@@ -205,7 +207,9 @@ class _StartWorkoutPageState extends State<StartWorkoutPage> {
                 // List of exercises in the current workout
                 ScopedModel<WorkoutModel>(
                   model: widget.workoutModel,
-                  child: ListWorkoutExerciseSetNew(),
+                  child: ListWorkoutExerciseSetNew(
+                    appModel: widget.model
+                  ),
                   //child: ListWorkoutExerciseSet(),
                 ),
                 Padding(
