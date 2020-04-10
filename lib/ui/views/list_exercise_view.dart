@@ -96,6 +96,10 @@ class _ListExerciseState extends State<ListExercise> {
   }
 
   Widget exerciseTile(AppModel model, Exercise exercise) {
+    bool isMultiSelection =
+        widget.isSelectable && widget.isMultiSelect && !widget.hasActions;
+    bool isSingleSelection =
+        widget.isSelectable && !widget.isMultiSelect && !widget.hasActions;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 1),
       child: Ink(
@@ -118,9 +122,7 @@ class _ListExerciseState extends State<ListExercise> {
             ),
             onTap: () {
               HapticFeedback.selectionClick();
-              if (widget.isSelectable &&
-                  widget.isMultiSelect &&
-                  !widget.hasActions) {
+              if (isMultiSelection) {
                 setState(() {
                   exercise.isCheck = !exercise.isCheck;
                   // Add the exercise only if it is selected
@@ -140,9 +142,7 @@ class _ListExerciseState extends State<ListExercise> {
                   }
                 });
               }
-              if (widget.isSelectable &&
-                  !widget.isMultiSelect &&
-                  !widget.hasActions) {
+              if (isSingleSelection) {
                 setState(() {
                   exercise.isCheck = !exercise.isCheck;
                   // Add the exercise only if it is selected
